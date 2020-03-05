@@ -12,5 +12,5 @@ public class OrganizationDto {
     private String website;
     private double rating;
     private String description;
-
+    private String logo;
 }

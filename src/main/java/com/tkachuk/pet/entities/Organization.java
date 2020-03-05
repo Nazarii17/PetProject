@@ -39,8 +39,8 @@ public class Organization {
     @NotBlank(message = "Please fill the Description!")
     @Length(max = 2048, message = "Description is to long!")
     private String description;
-    @Column(name = "filename")
-    private String filename;
+    @Column(name = "logoFilename")
+    private String logo;
 //    @Column()
 //    private Set<OrganizationType> organizationTypes
 

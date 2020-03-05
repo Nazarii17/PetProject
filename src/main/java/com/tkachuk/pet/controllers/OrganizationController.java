@@ -92,7 +92,7 @@ public class OrganizationController {
 
             file.transferTo(new File(uploadPath + "/" + resultFilename));
 
-            organization.setFilename(resultFilename);
+            organization.setLogo(resultFilename);
         }
     }
 
@@ -116,7 +116,7 @@ public class OrganizationController {
         organizationService.organizationSave(organizationToSave);
         List<OrganizationDto> organizationDtoList = organizationDtoService.findAll();
         model.addAttribute("organizationDtoList", organizationDtoList);
-        return "organizationDtoList";
+        return "redirect:/organizations/all"; // TODO: 05.03.2020 WTF?
     }
 
     @GetMapping("/delete/{id}")
