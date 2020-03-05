@@ -1,4 +1,4 @@
-
+@import url(https://fonts.googleapis.com/css?family=Rubik+One&subset=latin,cyrillic);
 
 .cont {
 text-align: center;
@@ -48,4 +48,8 @@ body {
 body {
   background: #007bff;
   background: linear-gradient(to right, #808080, #33AEFF);
+}
+
+gradient-text {
+ color:white
 }

@@ -121,7 +121,6 @@ public class OrganizationController {
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Model model) {
-
         organizationService.delete(id);
         model.addAttribute("organizationDtoList", organizationDtoService.findAll());
         return "organizationDtoList";

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,11 +22,11 @@ public class OrganizationMapper {
     }
 
     public Organization toEntity(@NonNull OrganizationDto organizationDto) {
-        return Objects.isNull(organizationDto) ? null : mapper.map(organizationDto, Organization.class);
+        return mapper.map(organizationDto, Organization.class);
     }
 
     public OrganizationDto toDto(@NonNull Organization organization) {
-        return Objects.isNull(organization) ? null : mapper.map(organization, OrganizationDto.class);
+        return mapper.map(organization, OrganizationDto.class);
     }
 
     public List<OrganizationDto> toDtoList(@NonNull Collection<Organization> organizations) {
