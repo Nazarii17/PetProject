@@ -28,30 +28,31 @@
 </head>
 <body>
 
-    <h1>Add new Organization</h1>
+<h1>Add new Organization</h1>
 
-    <div class="container-sm">
-        <form style="text-align: center" class="form-horizontal"
-              th:action="@{/organizations/add}"
-              th:object="${organization}"
-              th:method="post">
-            <div class="container-sm"
-                 th:insert="~{fragments/commonAdditionForms :: #addition-form}">
-            </div>
-            <p>
-                <button class="btn btn-outline-dark"
-                        type="submit">Add >
-                </button>
-                <button class="btn btn-outline-dark"
-                        type="reset">Reset >
-                </button>
-            </p>
-        </form>
-    </div>
+<div class="container-sm">
+    <form style="text-align: center" class="form-horizontal"
+          th:action="@{/organizations/add}"
+          th:object="${organization}"
+          th:method="post"
+          enctype="multipart/form-data">
+        <div class="container-sm"
+             th:insert="~{fragments/commonAdditionForms :: #addition-form}">
+        </div>
+        <p>
+            <button class="btn btn-outline-dark"
+                    type="submit">Add >
+            </button>
+            <button class="btn btn-outline-dark"
+                    type="reset">Reset >
+            </button>
+        </p>
+    </form>
+</div>
 
-    <div class="down"
-         th:insert="~{fragments/footer :: #down}">
-    </div>
+<div class="down"
+     th:insert="~{fragments/footer :: #down}">
+</div>
 
 </body>
 </html>

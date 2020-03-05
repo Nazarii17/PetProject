@@ -93,6 +93,7 @@
                 <!--Edit form-->
                 <form class="editForm"
                       action="#"
+                      enctype="multipart/form-data"
                       th:action="@{/organizations/update/{id}(id=${organization.id})}"
                       th:object="${organization}"
                       th:method="post">
