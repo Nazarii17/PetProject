@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Organizations list</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+
+<body>
+
+<div th:if="${not #lists.isEmpty(organizationDtoList)}">
+    <table class="table table-hover">
+        <h1 class="text-center p-3 mb-2 bg-dark text-white">Organizations list</h1>
+
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Website</th>
+            <th>Rating</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="organizationDto : ${organizationDtoList}">
+            <td th:text="${organizationDto.id}"></td>
+            <td th:text="${organizationDto.name}"></td>
+            <td th:text="${organizationDto.website}"></td>
+            <td th:text="${organizationDto.rating}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div th:if="${not #lists.isEmpty(organizationDtoList)}">
+    <div class="container">
+        <div class="card-columns">
+            <div th:each="organizationDto : ${organizationDtoList}">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="..." alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${organizationDto.name}"></h5>
+                        <small class="text-muted" th:text="${organizationDto.description}"></small>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <th>Website:</th>
+                                <td th:text="${organizationDto.website}"></td>
+                            </tr>
+                            <tr>
+                                <th>Rating:</th>
+                                <td th:text="${organizationDto.rating}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </ul>
+                    <div class="card-body">
+                        <button type="button" class="btn btn-outline-dark"><a
+                                th:href="@{'/organizations/info/' + ${organizationDto.name}}" class="info">Info</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <button type="button" class=" btn-outline-dark">
+        <a href="/organizations/add" class="addOrganization">Add Organization</a>
+    </button>
+</div>
+
+</body>
+</html>

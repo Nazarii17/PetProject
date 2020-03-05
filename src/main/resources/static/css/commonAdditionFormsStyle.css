@@ -1,0 +1,37 @@
+.input-group>.input-group-prepend {
+flex: 0 0 15%;
+}
+
+.input-group .input-group-text {
+width: 100%;
+}
+
+#down {
+position: absolute;
+bottom: 0;
+width: 100%;
+
+}
+
+/* Sticky Footer Classes */
+
+html,
+body {
+  height: 100%;
+}
+
+#page-content {
+  flex: 1 0 auto;
+}
+
+#sticky-footer {
+  flex-shrink: none;
+  bottom: 0;
+}
+
+/* Other Classes for Page Styling */
+
+body {
+  background: #007bff;
+  background: linear-gradient(to right, #808080, #33AEFF);
+}

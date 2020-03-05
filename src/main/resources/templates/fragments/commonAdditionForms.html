@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous">
+    </script>
+
+
+</head>
+<body>
+
+<div id="addition-form" class="cont">
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Name:</span>
+        </div>
+        <input type="text"
+               th:class="${nameError != 'Please fill the name!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+               th:field="*{name}"
+               placeholder="Name"/>
+        <div class="invalid-feedback">
+            <p th:text="${nameError}"></p>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Website:</span>
+        </div>
+        <input type="text"
+               th:class="${websiteError != 'Please fill the website!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+               th:field="*{website}"
+               placeholder="Your website"/>
+        <div class="invalid-feedback">
+            <p th:text="${websiteError}"></p>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Address:</span>
+        </div>
+        <input type="text"
+               th:class="${addressError != 'Please fill the address!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+               th:field="*{address}"
+               placeholder="Address"/>
+        <div class="invalid-feedback">
+            <p th:text="${addressError}"></p>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Phone number:</span>
+        </div>
+        <input type="text"
+               th:class="${phoneNumberError != 'Please fill the phoneNumber!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+               th:field="*{phoneNumber}"
+               placeholder="Organization's phone number"/>
+        <div class="invalid-feedback">
+            <p th:text="${phoneNumberError}"></p>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Rating:</span>
+        </div>
+        <input type="text"
+               th:class="${ratingError != 'Please fill the rating!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+               th:field="*{rating}"
+               placeholder="Rating"/>
+        <div class="invalid-feedback">
+            <p th:text="${ratingError}"></p>
+        </div>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Description:</span>
+        </div>
+        <input type="text"
+               th:class="${descriptionError != 'Please fill the Description!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+               th:field="*{description}"
+               placeholder="Description"/>
+        <div class="invalid-feedback">
+            <p th:text="${descriptionError}"></p>
+        </div>
+    </div>
+
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">File:</span>
+        </div>
+        <input type="file"
+               th:class="form-control is-valid"
+               placeholder="File"/>
+
+    </div>
+
+</div>
+
+</body>
+</html>

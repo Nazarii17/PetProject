@@ -1,0 +1,74 @@
+# compiled output
+/dist
+/tmp
+/out-tsc
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.iml
+*.ipr
+*.iws
+*.idea
+
+# Eclipse Project Files
+.classpath
+.project
+.settings/
+
+# Build Artifacts
+MANIFEST.MF
+META-INF/
+classes/
+.gradle/
+build/
+target/
+bin/
+out/
+dependency-reduced-pom.xml
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# Logs
+log.txt
+*.log
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+Thumbs.db
+*.DS_Store
+
+/.mvn/
+*/webapp/bower_components
+*/webapp/dist/
+*/webapp/node_modules/
+*/webapp/node/
+*/webapp/etc/
+*/webapp/package-lock.json
