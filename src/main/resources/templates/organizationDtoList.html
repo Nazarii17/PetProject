@@ -13,11 +13,13 @@
 
 <body>
 
+<div class="navbar"
+     th:insert="~{fragments/navbar :: #navbar}">
+</div>
+
 <div th:if="${not #lists.isEmpty(organizationDtoList)}">
     <table class="table table-hover">
         <h1 class="text-center p-3 mb-2 bg-dark text-white">Organizations list</h1>
-
-
         <thead>
         <tr>
             <th>ID</th>
@@ -37,15 +39,12 @@
     </table>
 </div>
 
-
-
-
 <div th:if="${not #lists.isEmpty(organizationDtoList)}">
     <div class="container">
         <div class="card-columns">
             <div th:each="organizationDto : ${organizationDtoList}">
 
-                <div class="card" style="width: 18rem;">
+                <div class="card">
                     <img class="card-img-top" th:src="@{${organizationDto.logo}}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${organizationDto.name}"></h5>
@@ -67,7 +66,8 @@
                     </ul>
                     <div class="card-body">
                         <button type="button" class="btn btn-outline-dark"><a
-                                th:href="@{'/organizations/info/' + ${organizationDto.name}}" class="info">Info</a>
+                                th:href="@{'/organizations/info/' + ${organizationDto.name}}"
+                                class="info">Info</a>
                         </button>
                     </div>
                 </div>
@@ -76,12 +76,6 @@
     </div>
 </div>
 
-
-<div>
-    <button type="button" class=" btn-outline-dark">
-        <a href="/organizations/add" class="addOrganization">Add Organization</a>
-    </button>
-</div>
 
 </body>
 </html>

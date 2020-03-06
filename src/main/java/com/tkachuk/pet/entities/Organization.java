@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Data
@@ -41,8 +42,9 @@ public class Organization {
     private String description;
     @Column(name = "logo")
     private String logo;
-//    @Column()
-//    private Set<OrganizationType> organizationTypes
-
+    @ElementCollection(targetClass = OrganizationType.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "organization_type", joinColumns = @JoinColumn(name = "id"))
+    @Enumerated(EnumType.STRING)
+    private Set<OrganizationType> organizationTypes;
 
 }

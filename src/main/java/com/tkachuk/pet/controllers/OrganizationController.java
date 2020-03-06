@@ -2,6 +2,7 @@ package com.tkachuk.pet.controllers;
 
 import com.tkachuk.pet.dtos.OrganizationDto;
 import com.tkachuk.pet.entities.Organization;
+import com.tkachuk.pet.entities.OrganizationType;
 import com.tkachuk.pet.services.OrganizationDtoService;
 import com.tkachuk.pet.services.OrganizationService;
 import com.tkachuk.pet.utils.ControllerUtils;
@@ -47,11 +48,13 @@ public class OrganizationController {
     public String getInfo(@PathVariable String name, Model model) {
         Organization organization = organizationService.findByName(name);
         model.addAttribute("organization", organization);
+        model.addAttribute("types", OrganizationType.values());
         return "info";
     }
 
     @GetMapping("/add")
-    public String addOrganization(Organization organization) {
+    public String addOrganization(Organization organization, Model model) {
+        model.addAttribute("types", OrganizationType.values());
         return "organizationAdd";
     }
 
@@ -66,6 +69,7 @@ public class OrganizationController {
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorsMap);
             model.addAttribute("organization", organization);
+
             return "organizationAdd";
         } else {
             saveFile(organization, file);
@@ -112,6 +116,7 @@ public class OrganizationController {
         organizationToSave.setRating(organization.getRating());
         organizationToSave.setDescription(organization.getDescription());
         saveFile(organizationToSave, file);
+        organizationToSave.setOrganizationTypes(organization.getOrganizationTypes());
 
         organizationService.organizationSave(organizationToSave);
         List<OrganizationDto> organizationDtoList = organizationDtoService.findAll();

@@ -1,7 +1,6 @@
 .input-group>.input-group-prepend {
 flex: 0 0 15%;
 }
-
 .input-group .input-group-text {
 width: 100%;
 }
@@ -13,12 +12,7 @@ width: 100%;
 
 }
 
-/* Sticky Footer Classes */
 
-html,
-body {
-  height: 100%;
-}
 
 #page-content {
   flex: 1 0 auto;

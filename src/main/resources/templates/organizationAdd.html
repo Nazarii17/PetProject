@@ -24,11 +24,14 @@
           th:href="@{/css/commonAdditionFormsStyle.css}"
           rel="stylesheet"
     />
-
 </head>
 <body>
 
-<h1>Add new Organization</h1>
+<!--<div class="navbar"-->
+<!--     th:insert="~{fragments/navbar :: #navbar}">-->
+<!--</div>-->
+
+<h1 class="text-center p-3 mb-2 bg-dark text-white">Add new Organization</h1>
 
 <div class="container-sm">
     <form style="text-align: center" class="form-horizontal"
@@ -39,6 +42,7 @@
         <div class="container-sm"
              th:insert="~{fragments/commonAdditionForms :: #addition-form}">
         </div>
+        <br>
         <p>
             <button class="btn btn-outline-dark"
                     type="submit">Add >
@@ -50,9 +54,9 @@
     </form>
 </div>
 
-<div class="down"
-     th:insert="~{fragments/footer :: #down}">
-</div>
+<!--<div class="down"-->
+<!--     th:insert="~{fragments/footer :: #down}">-->
+<!--</div>-->
 
 </body>
 </html>

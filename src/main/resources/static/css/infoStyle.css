@@ -3,6 +3,7 @@
 .cont {
 text-align: center;
 }
+
 .input-group>.input-group-prepend {
 flex: 0 0 30%;
 }
@@ -10,6 +11,7 @@ flex: 0 0 30%;
 .input-group .input-group-text {
 width: 100%;
 }
+
 .container-sm{
 margin: auto;
 width: 50%;
@@ -35,13 +37,9 @@ body {
   height: 100%;
 }
 
-#page-content {
 
-}
 
-#sticky-footer {
-  flex-shrink: none;
-}
+
 
 /* Other Classes for Page Styling */
 
