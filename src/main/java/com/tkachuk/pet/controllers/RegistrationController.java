@@ -31,6 +31,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Map<String, Object> model) {
+        // TODO: 09.03.2020 Service
         User userFromDb = userService.findByUsername(user.getUsername());
 
         if (userFromDb != null) {

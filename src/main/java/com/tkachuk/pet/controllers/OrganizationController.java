@@ -3,11 +3,13 @@ package com.tkachuk.pet.controllers;
 import com.tkachuk.pet.dtos.OrganizationDto;
 import com.tkachuk.pet.entities.Organization;
 import com.tkachuk.pet.entities.OrganizationType;
+import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.services.OrganizationDtoService;
 import com.tkachuk.pet.services.OrganizationService;
 import com.tkachuk.pet.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -53,13 +55,16 @@ public class OrganizationController {
     }
 
     @GetMapping("/add")
-    public String addOrganization(Organization organization, Model model) {
+    public String addOrganization(
+            Organization organization,
+            Model model) {
         model.addAttribute("types", OrganizationType.values());
         return "organizationAdd";
     }
 
     @PostMapping("/add")
     public String addOrganization(
+            @AuthenticationPrincipal User user,
             @Valid Organization organization,
             BindingResult bindingResult,
             Model model,
@@ -74,6 +79,7 @@ public class OrganizationController {
         } else {
             saveFile(organization, file);
             model.addAttribute("message", null);
+            organization.setAuthor(user);
             organizationService.organizationSave(organization);
         }
         List<OrganizationDto> organizationDtoList = organizationDtoService.findAll();
@@ -85,6 +91,7 @@ public class OrganizationController {
             @Valid Organization organization,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
+        // TODO: 09.03.2020 Service
         if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
 
@@ -108,7 +115,7 @@ public class OrganizationController {
             @RequestParam("file") MultipartFile file
     ) throws IOException {
         Organization organizationToSave = organizationService.getOne(id);
-
+        // TODO: 09.03.2020 Service
         organizationToSave.setName(organization.getName());
         organizationToSave.setWebsite(organization.getWebsite());
         organizationToSave.setAddress(organization.getAddress());

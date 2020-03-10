@@ -29,6 +29,9 @@ public class Organization {
     @NotNull
     @NotBlank(message = "Please fill the website!")
     private String website;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
     @Column(name = "address")
     private String address;
     @Column(unique = true, name = "phone_number")
@@ -46,5 +49,4 @@ public class Organization {
     @CollectionTable(name = "organization_type", joinColumns = @JoinColumn(name = "id"))
     @Enumerated(EnumType.STRING)
     private Set<OrganizationType> organizationTypes;
-
 }

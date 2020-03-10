@@ -5,6 +5,7 @@ import com.tkachuk.pet.repositories.OrganizationRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,12 @@ public class OrganizationService {
 
     public Organization getOne(Long id){
         return organizationRepo.getOne(id);
+    }
+
+    @Transactional
+    public void update(Organization organization){
+        //....
+        organizationRepo.save(organization);
     }
 
     public void organizationSave(Organization organization){
