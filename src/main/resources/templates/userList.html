@@ -13,8 +13,8 @@
 
 <body>
 
-<div class="navbar"
-     th:insert="~{fragments/navbar :: #navbar}">
+<div class="NavBar"
+     th:insert="~{fragments/commonNavBar :: #navbar}">
 </div>
 
 <div th:if="${not #lists.isEmpty(users)}">
