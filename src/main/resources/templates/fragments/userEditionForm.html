@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+
+<div id="addition-form" class="addition-form">
+    <div class="container-fluid">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">ID:</span>
+            </div>
+            <input type="hidden"
+                   th:class="${nameError != 'Please fill the name!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:field="*{id}"
+                   placeholder="ID"/>
+            <div class="invalid-feedback">
+                <p th:text="${nameError}"></p>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Name:</span>
+            </div>
+            <input type="text"
+                   th:class="${nameError != 'Please fill the name!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+
+                   th:field="*{username}"
+
+                   placeholder="Name"/>
+            <div class="invalid-feedback">
+                <p th:text="${nameError}"></p>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Password:</span>
+            </div>
+            <input type="text"
+                   th:class="${websiteError != 'Please fill the website!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+
+                   th:field="*{password}"
+
+                   placeholder="Your password"/>
+            <div class="invalid-feedback">
+                <p th:text="${websiteError}"></p>
+            </div>
+        </div>
+<!--        <p th:text="${roles}"></p>-->
+        <div th:each="role: ${roles}">
+            <input type="checkbox" th:value="${role}" th:field="*{roles}">
+            <label th:text="${role}" ></label>
+
+<!--            <p th:text="${role}"></p>-->
+        </div>
+
+
+
+<!--        <div class="input-group mb-3">-->
+<!--            <div class="input-group-prepend">-->
+<!--                <span class="input-group-text">Type:</span>-->
+<!--            </div>-->
+<!--            <div class="checkbox" th:each="role: ${roles}">-->
+<!--                <label th:text="${role}"></label>-->
+<!--                <input type="checkbox"-->
+<!--                       th:field="*{role}"-->
+<!--                       />-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+</div>
+</body>
+</html>

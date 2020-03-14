@@ -13,4 +13,9 @@ Login page
 </form>
 <a href="/registration">Add new user</a>
 </body>
+
+<form action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+    <input type="submit" value="Sign Out"/>
+</form>
 </html>

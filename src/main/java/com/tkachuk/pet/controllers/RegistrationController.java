@@ -1,6 +1,5 @@
 package com.tkachuk.pet.controllers;
 
-import com.tkachuk.pet.entities.Role;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.services.OrganizationService;
 import com.tkachuk.pet.services.UserService;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Collections;
 import java.util.Map;
 
 @Controller
@@ -31,18 +29,12 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Map<String, Object> model) {
-        // TODO: 09.03.2020 Service
-        User userFromDb = userService.findByUsername(user.getUsername());
-
-        if (userFromDb != null) {
+        if (userService.isUserExist(user)) {
             model.put("message", "User exists!");
             return "registration";
+        } else {
+            userService.add(user);
+            return "redirect:/login";
         }
-
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userService.save(user);
-
-        return "redirect:/login";
     }
 }

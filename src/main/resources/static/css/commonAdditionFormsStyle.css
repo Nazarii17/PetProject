@@ -26,6 +26,15 @@ width: 100%;
 /* Other Classes for Page Styling */
 
 body {
-  background: #007bff;
-  background: linear-gradient(to right, #808080, #33AEFF);
+ background-image: linear-gradient(to right bottom, #d16ba5, #a05a8e, #734973, #4c3754, #2b2434, #2c2b3b, #2d3242, #2e3948, #3c647c, #3f93ac, #43c6d4, #5ffbf1);
+}
+
+.form-inline {
+   margin:10px;
+}
+
+.collapseOne {
+    background-color: transparent;
+    background: transparent;
+    border-width: 0px;
 }

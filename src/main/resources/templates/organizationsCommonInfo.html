@@ -9,25 +9,20 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
+    <style>
+.form-inline {
+   margin:10px;
+}
+    </style>
 </head>
 
 <body>
 
-
-
-
-<div class="navbar"
-     th:insert="~{fragments/navbar :: #navbar}">
+<div class="NavBar"
+     th:insert="~{fragments/commonNavBar :: #navbar}">
 </div>
 
-<div>
-    <form action="/logout" method="post">
-        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-        <input type="submit" value="Sign Out"/>
-    </form>
-</div>
-
-<div th:if="${not #lists.isEmpty(organizationDtoList)}">
+<div th:if="${not #lists.isEmpty(organizationCommonInfoDtoList)}">
     <table class="table table-hover">
         <h1 class="text-center p-3 mb-2 bg-dark text-white">Organizations list</h1>
         <thead>
@@ -39,44 +34,48 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="organizationDto : ${organizationDtoList}">
-            <td th:text="${organizationDto.id}"></td>
-            <td th:text="${organizationDto.name}"></td>
-            <td th:text="${organizationDto.website}"></td>
-            <td th:text="${organizationDto.rating}"></td>
+        <tr th:each="organizationCommonInfoDto : ${organizationCommonInfoDtoList}">
+            <td th:text="${organizationCommonInfoDto.id}"></td>
+            <td th:text="${organizationCommonInfoDto.name}"></td>
+            <td th:text="${organizationCommonInfoDto.website}"></td>
+            <td th:text="${organizationCommonInfoDto.rating}"></td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<div th:if="${not #lists.isEmpty(organizationDtoList)}">
+<div th:if="${not #lists.isEmpty(organizationCommonInfoDtoList)}">
     <div class="container">
         <div class="card-columns">
-            <div th:each="organizationDto : ${organizationDtoList}">
+            <div th:each="organizationCommonInfoDto : ${organizationCommonInfoDtoList}">
 
-                <div class="card">
-                    <img class="card-img-top" th:src="@{${organizationDto.logo}}" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${organizationDto.name}"></h5>
-                        <small class="text-muted" th:text="${organizationDto.description}"></small>
+                <div class="card ">
+                    <span th:if="${organizationCommonInfoDto.logo != null}">
+                        <img class="card-img-top img-thumbnail"
+                             th:src="@{${organizationCommonInfoDto.logo}}"
+                             alt="Logo of organization">
+                    </span>
+                    <div class="card-body card-body-cascade">
+                        <h5 class="card-title" th:text="${organizationCommonInfoDto.name}"></h5>
+                        <small class="text-muted" th:text="${organizationCommonInfoDto.description}"></small>
                     </div>
                     <ul class="list-group list-group-flush">
                         <table class="table table-hover">
                             <tbody>
                             <tr>
                                 <th>Website:</th>
-                                <td th:text="${organizationDto.website}"></td>
+                                <td th:text="${organizationCommonInfoDto.website}"></td>
                             </tr>
                             <tr>
                                 <th>Rating:</th>
-                                <td th:text="${organizationDto.rating}"></td>
+                                <td th:text="${organizationCommonInfoDto.rating}"></td>
                             </tr>
                             </tbody>
                         </table>
                     </ul>
                     <div class="card-body">
                         <button type="button" class="btn btn-outline-dark"><a
-                                th:href="@{'/organizations/info/' + ${organizationDto.name}}"
+                                th:href="@{'/organizations/info/' + ${organizationCommonInfoDto.id}}"
                                 class="info">Info</a>
                         </button>
                     </div>
@@ -85,7 +84,6 @@
         </div>
     </div>
 </div>
-
 
 </body>
 </html>

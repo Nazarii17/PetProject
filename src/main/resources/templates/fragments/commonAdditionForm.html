@@ -3,15 +3,15 @@
 
 <body>
 
-
 <div id="addition-form" class="addition-form">
     <div class="container-fluid">
+
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">Name:</span>
             </div>
             <input type="text"
-                   th:class="${nameError != 'Please fill the name!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${nameError != 'Please fill the name!'} ? 'form-control is-valid' : 'form-control is-invalid' "
                    th:field="*{name}"
                    placeholder="Name"/>
             <div class="invalid-feedback">
@@ -78,7 +78,7 @@
                 <p th:text="${descriptionError}"></p>
             </div>
         </div>
-        <div class="custom-file">
+        <div class="custom-file mb-3">
             <input type="file" name="file" id="customFile">
             <label class="custom-file-label" for="customFile">Choose file</label>
         </div>
@@ -87,46 +87,15 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">Type:</span>
             </div>
-
-
             <select th:field="*{organizationTypes}">
                 <option th:each="type : ${types}"
                         th:value="${type}"
                         th:text="${type}"
-                        ></option>
+                ></option>
             </select>
-
-
-<!--            <select class="mdb-select md-form colorful-select dropdown-dark"-->
-<!--                    id="custom-select"-->
-<!--                    th:each="type : ${types}">-->
-
-<!--                <option th:value="${type}"><p th:text="${type}"></p></option>-->
-
-<!--            </select>-->
-
         </div>
-
-
-        <!--        <div class="input-group mb-3">-->
-        <!--            <div class="input-group-prepend">-->
-        <!--                <span class="input-group-text">Type:</span>-->
-        <!--            </div>-->
-
-
-        <!--            <select th:name="*{type}">-->
-        <!--                <option th:each="type : ${types}"-->
-        <!--                        th:value="${type}">-->
-        <!--&lt;!&ndash;                        th:text="${user.name}"&ndash;&gt;-->
-        <!--&lt;!&ndash;                        th:selected="${requestedUser.id == user.id}"&ndash;&gt;-->
-        <!--&lt;!&ndash;                >&ndash;&gt;-->
-        <!--                </option>-->
-        <!--            </select>-->
-
     </div>
 
-
-</div>
 </div>
 </body>
 </html>

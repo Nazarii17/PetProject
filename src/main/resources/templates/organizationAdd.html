@@ -27,28 +27,36 @@
 </head>
 <body>
 
-<!--<div class="navbar"-->
-<!--     th:insert="~{fragments/navbar :: #navbar}">-->
-<!--</div>-->
-
+<div class="NavBar"
+     th:insert="~{fragments/commonNavBar :: #navbar}">
+</div>
 <h1 class="text-center p-3 mb-2 bg-dark text-white">Add new Organization</h1>
 
 <div class="container-sm">
     <form style="text-align: center" class="form-horizontal"
           th:action="@{/organizations/add}"
-          th:object="${organization}"
+          th:object="${organizationDto}"
           th:method="post"
           enctype="multipart/form-data">
+
         <div class="container-sm"
-             th:insert="~{fragments/commonAdditionForms :: #addition-form}">
+             th:insert="~{fragments/commonAdditionForm :: #addition-form}">
         </div>
+
         <br>
         <p>
             <button class="btn btn-outline-dark"
+                    style="color:black"
                     type="submit">Add >
             </button>
             <button class="btn btn-outline-dark"
+                    style="color:black"
                     type="reset">Reset >
+            </button>
+            <button type="button" class="btn btn-outline-dark"><a
+                    th:href="@{/organizations/all}"
+                    style="color:black"
+                    class="info">Cancel ></a>
             </button>
         </p>
     </form>

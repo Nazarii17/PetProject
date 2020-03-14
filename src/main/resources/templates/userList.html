@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Users list</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+
+<body>
+
+<div class="navbar"
+     th:insert="~{fragments/navbar :: #navbar}">
+</div>
+
+<div th:if="${not #lists.isEmpty(users)}">
+    <table class="table table-hover">
+        <h1 class="text-center p-3 mb-2 bg-dark text-white">Users list</h1>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Roles</th>
+            <th>Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.roles}"></td>
+            <td th:text="${user.password}"></td>
+            <td>
+                <div class="card-body">
+                    <button type="button" class="btn btn-outline-dark"><a
+                            th:href="@{'/user/edit/' + ${user.username}}"
+                            class="info">Edit</a>
+                    </button>
+                </div>
+            </td><td>
+                <div class="card-body">
+                    <button class="btn btn-outline-dark"
+                            type="button">
+                        <a th:href="@{/user/delete/{id}(id=${user.id})}">Delete ></a>
+                    </button>
+<!--                    <button type="button" class="btn btn-outline-dark"><a-->
+<!--                            th:href="@{/user/edit/' + ${user.username}}"-->
+<!--                            class="info">Delete</a>-->
+<!--                    </button>-->
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

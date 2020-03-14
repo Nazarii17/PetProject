@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Editor</title>
+</head>
+<body>
+<h1>User Editor</h1>
+
+<form class="editForm "
+      action="#"
+      enctype="multipart/form-data"
+      th:action="@{/user/edit/{id}(id=${user.id})}"
+      th:object="${user}"
+      th:method="post">
+
+    <div class="container-sm"
+         th:insert="~{fragments/userEditionForm :: #addition-form}">
+    </div>
+
+    <p>
+        <button class="btn btn-outline-dark"
+                type="submit">Edit >
+        </button>
+        <button class="btn btn-outline-dark"
+                type="reset">Reset >
+        </button>
+    </p>
+</form>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 package com.tkachuk.pet.mappers;
 
-import com.tkachuk.pet.dtos.OrganizationDto;
+import com.tkachuk.pet.dtos.OrganizationCommonInfoDto;
 import com.tkachuk.pet.entities.Organization;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
@@ -21,18 +21,22 @@ public class OrganizationMapper {
         this.mapper = mapper;
     }
 
-    public Organization toEntity(@NonNull OrganizationDto organizationDto) {
-        return mapper.map(organizationDto, Organization.class);
+    public Organization toEntity(@NonNull OrganizationCommonInfoDto organizationCommonInfoDto) {
+
+        return mapper.map(organizationCommonInfoDto, Organization.class);
     }
 
-    public OrganizationDto toDto(@NonNull Organization organization) {
-        return mapper.map(organization, OrganizationDto.class);
+    public OrganizationCommonInfoDto toDtoN(@NonNull Organization organization) {
+        return mapper.map(organization, OrganizationCommonInfoDto.class);
     }
 
-    public List<OrganizationDto> toDtoList(@NonNull Collection<Organization> organizations) {
+    public List<OrganizationCommonInfoDto> toDtoNList(@NonNull Collection<Organization> organizations) {
         return organizations
                 .stream()
-                .map(this::toDto)
+                .map(this::toDtoN)
                 .collect(Collectors.toList());
     }
+
+
+
 }
