@@ -7,6 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Set;
 
@@ -30,6 +32,13 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @Column(name = "email")
+    @Email(message = "Email's not correct!")
+    @NotBlank(message = "Email can't be empty!")
+    private String email;
+    @Column(name = "activationCode")
+    private String activationCode;
 
     @Override
     public boolean isAccountNonExpired() {

@@ -49,4 +49,11 @@ public class Organization {
     @CollectionTable(name = "organization_type", joinColumns = @JoinColumn(name = "id"))
     @Enumerated(EnumType.STRING)
     private Set<OrganizationType> organizationTypes;
+
+
+
+
+    private Set<String> photos;
+
+
 }
