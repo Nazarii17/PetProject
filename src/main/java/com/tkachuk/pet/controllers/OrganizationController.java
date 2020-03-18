@@ -44,14 +44,16 @@ public class OrganizationController {
                        @Valid OrganizationDto organizationDto,
                        BindingResult bindingResult,
                        Model model,
-                       @RequestParam("file") MultipartFile file) throws IOException {
+                       @RequestParam("file") MultipartFile logo
+
+    ) throws IOException {
         if (bindingResult.hasErrors()) {
             return organizationService.getAdditionPageWithErrors(
                     organizationDto,
                     bindingResult,
                     model);
         } else {
-            organizationService.save(user, organizationDto, file);
+            organizationService.save(user, organizationDto, logo);
             model.addAttribute("message", null);
         }
         return "redirect:/organizations/all";

@@ -49,11 +49,20 @@ public class Organization {
     @CollectionTable(name = "organization_type", joinColumns = @JoinColumn(name = "id"))
     @Enumerated(EnumType.STRING)
     private Set<OrganizationType> organizationTypes;
+    @OneToMany()
+    @JoinColumn(name = "organization_id")
+    private Set<Photo> photos;
 
-
-
-
-    private Set<String> photos;
-
-
+    public Organization(Long id, @NotNull @NotBlank(message = "Please fill the name!") String name, @NotNull @NotBlank(message = "Please fill the website!") String website, User author, String address, String phoneNumber, double rating, @NotNull @NotBlank(message = "Please fill the Description!") @Length(max = 2048, message = "Description is to long!") String description, String logo, Set<OrganizationType> organizationTypes) {
+        this.id = id;
+        this.name = name;
+        this.website = website;
+        this.author = author;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.rating = rating;
+        this.description = description;
+        this.logo = logo;
+        this.organizationTypes = organizationTypes;
+    }
 }

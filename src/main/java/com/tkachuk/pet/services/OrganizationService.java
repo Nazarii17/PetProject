@@ -10,6 +10,7 @@ import com.tkachuk.pet.mappers.OrganizationMapper;
 import com.tkachuk.pet.mappers.UserMapper;
 import com.tkachuk.pet.repositories.OrganizationRepo;
 import com.tkachuk.pet.utils.ControllerUtils;
+import com.tkachuk.pet.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class OrganizationService {
@@ -71,14 +71,14 @@ public class OrganizationService {
      */
     public void setLogo(Organization organization,
                         MultipartFile file) throws IOException {
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
+
+        if (FileUtil.isFileValid(file)) {
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFilename = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
+            String resultFilename = FileUtil.getFilename(file);
+            FileUtil.saveFile(uploadPath, file, resultFilename);
             organization.setLogo(resultFilename);
         }
     }
@@ -144,6 +144,7 @@ public class OrganizationService {
                 .description(organization.getDescription())
                 .logo(organization.getLogo())
                 .organizationTypes(organization.getOrganizationTypes())
+                .photos(organization.getPhotos())
                 .build();
     }
 
@@ -188,7 +189,8 @@ public class OrganizationService {
                 organizationDto.getRating(),
                 organizationDto.getDescription(),
                 organizationDto.getLogo(),
-                organizationDto.getOrganizationTypes()
+                organizationDto.getOrganizationTypes(),
+                organizationDto.getPhotos()
         );
     }
 
@@ -202,7 +204,9 @@ public class OrganizationService {
      */
     public void save(User user,
                      OrganizationDto organizationDto,
-                     MultipartFile file) throws IOException {
+                     MultipartFile file
+    ) throws IOException {
+//        System.err.println(Arrays.toString(photos));
 
         Organization organization = toEntity(organizationDto, user);
         setLogo(organization, file);
