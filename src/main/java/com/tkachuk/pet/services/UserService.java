@@ -9,9 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -49,7 +47,8 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
-    public void update(@Valid User user, @PathVariable("id") Long id) {
+    public void update(User user,
+                       Long id) {
         User userToSave = getOne(id);
         userToSave.setUsername(user.getUsername());
         userToSave.setPassword(user.getPassword());
@@ -113,15 +112,11 @@ public class UserService implements UserDetailsService {
 
     public boolean activateUser(String code) {
         User user = userRepo.findByActivationCode(code);
-
         if (user == null) {
             return false;
         }
-
         user.setActivationCode(null);
-
         userRepo.save(user);
-
         return true;
     }
 }

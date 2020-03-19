@@ -1,7 +1,7 @@
 package com.tkachuk.pet.services;
 
-import com.tkachuk.pet.dtos.OrganizationCommonInfoDto;
-import com.tkachuk.pet.dtos.OrganizationDto;
+import com.tkachuk.pet.dtos.organization.OrganizationCommonInfoDto;
+import com.tkachuk.pet.dtos.organization.OrganizationDto;
 import com.tkachuk.pet.dtos.UserDto;
 import com.tkachuk.pet.entities.Organization;
 import com.tkachuk.pet.entities.OrganizationType;

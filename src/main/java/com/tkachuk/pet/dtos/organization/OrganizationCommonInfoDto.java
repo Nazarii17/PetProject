@@ -1,4 +1,4 @@
-package com.tkachuk.pet.dtos;
+package com.tkachuk.pet.dtos.organization;
 
 import lombok.*;
 

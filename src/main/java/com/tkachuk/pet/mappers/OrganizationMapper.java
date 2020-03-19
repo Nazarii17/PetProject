@@ -1,6 +1,6 @@
 package com.tkachuk.pet.mappers;
 
-import com.tkachuk.pet.dtos.OrganizationCommonInfoDto;
+import com.tkachuk.pet.dtos.organization.OrganizationCommonInfoDto;
 import com.tkachuk.pet.entities.Organization;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
