@@ -142,10 +142,8 @@
 </div>
 
 </div>
-
 <!--Info-->
 <p th:text="${organizationDto}"></p>
-
 <!--Edit collapse-->
 <div class="accordion text-center" id="accordionExample">
 
@@ -166,7 +164,7 @@
             </a>
         </button>
         <button type="button" class="btn btn-outline-dark"><a
-                th:href="@{'/photos/add/' + ${organizationDto.id}}"
+                th:href="@{'/photos/all/' + ${organizationDto.id}}"
                 class="text-dark">Change photos ></a>
         </button>
     </p>

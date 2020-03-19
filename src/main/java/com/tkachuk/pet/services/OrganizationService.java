@@ -5,6 +5,7 @@ import com.tkachuk.pet.dtos.OrganizationDto;
 import com.tkachuk.pet.dtos.UserDto;
 import com.tkachuk.pet.entities.Organization;
 import com.tkachuk.pet.entities.OrganizationType;
+import com.tkachuk.pet.entities.Photo;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.mappers.OrganizationMapper;
 import com.tkachuk.pet.mappers.UserMapper;
@@ -19,10 +20,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class OrganizationService {
@@ -33,14 +34,16 @@ public class OrganizationService {
     private final OrganizationRepo organizationRepo;
     private final OrganizationMapper organizationMapper;
     private final UserMapper userMapper;
+    private final PhotoService photoService;
 
     @Autowired
     public OrganizationService(OrganizationRepo organizationRepo,
                                UserMapper userMapper,
-                               OrganizationMapper organizationMapper) {
+                               OrganizationMapper organizationMapper, PhotoService photoService) {
         this.organizationRepo = organizationRepo;
         this.userMapper = userMapper;
         this.organizationMapper = organizationMapper;
+        this.photoService = photoService;
     }
 
     // Todo!!!
@@ -50,8 +53,8 @@ public class OrganizationService {
         organizationRepo.save(organization);
     }
 
-    public void save(Organization organization) {
-        organizationRepo.save(organization);
+    public Organization save(Organization organization) {
+        return organizationRepo.save(organization);
     }
 
     public Organization getOne(Long id) {
@@ -73,11 +76,7 @@ public class OrganizationService {
                         MultipartFile file) throws IOException {
 
         if (FileUtil.isFileValid(file)) {
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            String resultFilename = FileUtil.getFilename(file);
+            String resultFilename = FileUtil.getResultFilename(file, uploadPath);
             FileUtil.saveFile(uploadPath, file, resultFilename);
             organization.setLogo(resultFilename);
         }
@@ -242,5 +241,30 @@ public class OrganizationService {
         organizationToSave.setOrganizationTypes(organization.getOrganizationTypes());
 
         save(organizationToSave);
+    }
+
+    //Todo should it be here or PhotoService?
+
+    /**
+     * Sets photos to an Organization ith a given Id;
+     *
+     * @param id     - id Of an Organization to work with;
+     * @param photos - given by user from UI photos to be sett to an Organization;
+     * @return - Updated Organization;
+     * @throws IOException - File error;
+     */
+    public Organization addNewPhotos(Long id,
+                                     MultipartFile[] photos) throws IOException {
+        Organization organization = getOne(id);
+        Set<Photo> organizationPhotos = organization.getPhotos();
+        for (MultipartFile newPhoto : photos) {
+            Photo photo = new Photo();
+            if (FileUtil.isFileValid(newPhoto)) {
+                photoService.updatePhotoName(newPhoto, photo);
+                organizationPhotos.add(photoService.save(photo));
+            }
+        }
+        organization.setPhotos(organizationPhotos);
+        return save(organization);
     }
 }

@@ -28,10 +28,9 @@
 
 <!--<p th:text="${organizationPhotos}"></p>-->
 
-
 <div class="container">
 
-    <form th:action="@{/photos/add/{id}(id=${id})}"
+    <form th:action="@{/photos/all/{id}(id=${id})}"
           th:method="post"
           enctype="multipart/form-data">
         <div class="custom-file mb-3">
@@ -60,7 +59,6 @@
         </div>
     </form>
     <br>
-
 
     <div class="card-columns">
         <div th:each="organizationPhoto : ${organizationPhotos}">
@@ -108,7 +106,6 @@
     </div>
 </div>
 <br>
-
 
 </body>
 </html>

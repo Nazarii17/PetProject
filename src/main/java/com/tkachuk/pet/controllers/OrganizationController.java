@@ -72,7 +72,7 @@ public class OrganizationController {
                          @AuthenticationPrincipal User user,
                          @Valid OrganizationDto organizationDto,
                          BindingResult bindingResult,
-                         @RequestParam("file") MultipartFile file,
+                         @RequestParam("file") MultipartFile logo,
                          Model model
     ) throws IOException {
         if (bindingResult.hasErrors()) {
@@ -81,7 +81,7 @@ public class OrganizationController {
                     bindingResult,
                     model);
         } else {
-            organizationService.update(id, user, organizationDto, file);
+            organizationService.update(id, user, organizationDto, logo);
             return "redirect:/organizations/all";
         }
     }
