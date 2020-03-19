@@ -19,4 +19,12 @@ public class PhotoService {
     public Photo save(Photo photo) {
         return photoRepo.save(photo);
     }
+
+    public void delete(long id) {
+        photoRepo.deleteById(id);
+    }
+
+    public Photo getOne(Long id) {
+        return photoRepo.getOne(id);
+    }
 }

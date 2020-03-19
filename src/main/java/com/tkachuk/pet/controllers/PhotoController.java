@@ -24,7 +24,7 @@ public class PhotoController {
     @Value("${upload.path}")
     private String uploadPath;
 
-//    private final Logger logger = LoggerFactory.getLogger(PhotoController.class);
+    //    private final Logger logger = LoggerFactory.getLogger(PhotoController.class);
     private final OrganizationService organizationService;
     private final PhotoService photoService;
 
@@ -43,16 +43,16 @@ public class PhotoController {
     }
 
     @PostMapping("/add/{id}")
-    public String bla( @PathVariable Long id,
-                       @RequestParam("photos") MultipartFile[] photos,
-                       Model model
+    public String bla(@PathVariable Long id,
+                      @RequestParam("photos") MultipartFile[] photos,
+                      Model model
     ) throws IOException {
 
         Organization organization = organizationService.getOne(id);
 
         Set<Photo> orgPhotos = organization.getPhotos();
 
-        for (MultipartFile file : photos){
+        for (MultipartFile file : photos) {
 
             Photo p = new Photo();
 
@@ -70,10 +70,37 @@ public class PhotoController {
 
         organization.setPhotos(orgPhotos);
         organizationService.save(organization);
-        return "redirect:/organizations/all";
+        return "redirect:/photos/add/{id}";
     }
 
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id,
+                         @RequestParam("file") MultipartFile logo,
+                         @RequestParam(value = "organizationId") Long orgId
 
+    ) throws IOException {
 
+        Photo photo = photoService.getOne(id);
 
+        if (FileUtil.isFileValid(logo)) {
+            File uploadDir = new File(uploadPath);
+
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+            String resultFilename = FileUtil.getFilename(logo);
+            FileUtil.saveFile(uploadPath, logo, resultFilename);
+            photo.setName(resultFilename);
+            photoService.save(photo);
+        }
+
+        return "redirect:/photos/add/" + orgId;
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") long id,
+                         @RequestParam(value = "organizationId") Long orgId) {
+        photoService.delete(id);
+        return "redirect:/photos/add/" + orgId;
+    }
 }

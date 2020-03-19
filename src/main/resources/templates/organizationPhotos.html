@@ -16,35 +16,99 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
-
-    <!--    <link href="../static/css/commonAdditionFormsStyle.css"-->
-    <!--          th:href="@{/css/commonAdditionFormsStyle.css}"-->
-    <!--          rel="stylesheet"-->
-    <!--    />-->
 </head>
 <body>
-<form th:action="@{/photos/add/{id}(id=${id})}"
-      th:method="post"
-      enctype="multipart/form-data">
-    <div class="custom-file mb-3">
-        <!--        <input type="file"-->
-        <!--               name="photos"-->
-        <!--               multiple="multiple"-->
-        <!--               id="customFiles">-->
-        <!--        <label class="custom-file-label"-->
-        <!--               for="customFiles">Choose photos-->
-        <!--        </label>-->
-        <div class="custom-file mb-3">
-            <input type="file"
-                   name="photos"
-                   id="photos"
-                   multiple="multiple">
-            <label class="custom-file-label" for="photos">Choose photos ></label>
-        </div>
-        <p>
-            <input id="submit" type="submit" tabindex="5" value="Add photos">
-        </p>
+
+<div>
+    <div class="NavBar"
+         th:insert="~{fragments/commonNavBar :: #navbar}">
     </div>
-</form>
+    <br>
+</div>
+
+<!--<p th:text="${organizationPhotos}"></p>-->
+
+
+<div class="container">
+
+    <form th:action="@{/photos/add/{id}(id=${id})}"
+          th:method="post"
+          enctype="multipart/form-data">
+        <div class="custom-file mb-3">
+
+            <div class="custom-file mb-3">
+                <input type="file"
+                       name="photos"
+                       id="photos"
+                       multiple="multiple">
+                <label class="custom-file-label" for="photos">Choose photos ></label>
+            </div>
+            <p>
+                <button class="btn btn-outline-dark"
+                        style="color:black"
+                        type="submit">Add photos >
+                </button>
+
+                <button type="button" class="btn btn-outline-dark"><a
+                        th:href="@{/organizations/info/{id}(id=${id})}"
+                        style="color:black"
+                        class="info">Cancel ></a>
+                </button>
+
+            </p>
+
+        </div>
+    </form>
+    <br>
+
+
+    <div class="card-columns">
+        <div th:each="organizationPhoto : ${organizationPhotos}">
+
+            <div class="card ">
+
+                <img th:src="@{'/organizations/' + ${organizationPhoto.name}}"
+                     class="d-block w-100"
+                     style="height:400px;"
+                     alt="Photo">
+                <div class="card-body">
+
+                    <form th:action="@{/photos/update/{id}(id=${organizationPhoto.id})}"
+                          th:method="post"
+                          enctype="multipart/form-data">
+                        <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <br>
+                        <br>
+                        <input type="hidden"
+                               th:name="organizationId"
+                               th:value="${id}"/>
+                        <p>
+                            <button class="btn btn-outline-dark"
+                                    style="color:black"
+                                    type="submit">Change photo >
+                            </button>
+                        </p>
+                    </form>
+                    <form th:action="@{/photos/delete/{id}(id=${organizationPhoto.id})}">
+                        <input type="hidden"
+                               th:name="organizationId"
+                               th:value="${id}"
+                        />
+                        <button class="btn btn-outline-dark"
+                                style="color:black"
+                                type="submit">Delete >
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+
 </body>
 </html>

@@ -33,7 +33,8 @@
 <h1 class="text-center p-3 mb-2 bg-dark text-white">Add new Organization</h1>
 
 <div class="container-sm">
-    <form style="text-align: center" class="form-horizontal"
+    <form style="text-align: center"
+          class="form-horizontal"
           th:action="@{/organizations/add}"
           th:object="${organizationDto}"
           th:method="post"
