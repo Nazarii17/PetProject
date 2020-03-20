@@ -51,7 +51,7 @@ public class Organization {
     private Set<OrganizationType> organizationTypes;
     @OneToMany()
     @JoinColumn(name = "organization_id")
-    private Set<Photo> photos;
+    private Set<OrganizationPhoto> organizationPhotos;
 
     public Organization(Long id, @NotNull @NotBlank(message = "Please fill the name!") String name, @NotNull @NotBlank(message = "Please fill the website!") String website, User author, String address, String phoneNumber, double rating, @NotNull @NotBlank(message = "Please fill the Description!") @Length(max = 2048, message = "Description is to long!") String description, String logo, Set<OrganizationType> organizationTypes) {
         this.id = id;

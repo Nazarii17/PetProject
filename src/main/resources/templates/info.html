@@ -102,21 +102,21 @@
                 </div>
             </div>
             <div class="col-md-4"
-                 th:if="${not #lists.isEmpty(organizationDto.photos)}">
+                 th:if="${not #lists.isEmpty(organizationDto.organizationPhotos)}">
                 <div class="container-md">
-                    <!--Carousel to display all photos of the organization-->
+                    <!--Carousel to display all organizationPhotos of the organization-->
                     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <img style="height:400px;"
-                                     th:src="@{'/organizations/' + ${organizationDto.photos[0].name}}"
+                                     th:src="@{'/organizations/' + ${organizationDto.organizationPhotos[0].name}}"
                                      class="d-block w-100 rounded-circle" alt="Photo">
                             </div>
                             <!--Skip first element &gt; 1-->
-                            <div class="carousel-item" th:each="photo, i : ${organizationDto.photos}"
+                            <div class="carousel-item" th:each="organizationPhoto, i : ${organizationDto.organizationPhotos}"
                                  th:if="${i.count} &gt; 1">
                                 <img
-                                        th:src="@{'/organizations/' + ${photo.name}}"
+                                        th:src="@{'/organizations/' + ${organizationPhoto.name}}"
                                         class="d-block w-100 rounded-circle"
                                         style="height:400px;"
                                         alt="Photo">

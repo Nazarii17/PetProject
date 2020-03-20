@@ -36,14 +36,20 @@ public class User implements UserDetails {
     private String email;
     @Column(name = "activationCode")
     private String activationCode;
-
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+    @OneToMany()
+    @JoinColumn(name = "user_id")
+    private Set<UserPhoto> userPhotos;
 
-    public User(Long id, @NotBlank(message = "Please fill the Username!") String username, @Email(message = "Email's not correct!") @NotBlank(message = "Please fill the Email!") String email, Set<Role> roles) {
+    public User(Long id,
+                @NotBlank(message = "Please fill the Username!") String username,
+                @Email(message = "Email's not correct!")
+                @NotBlank(message = "Please fill the Email!") String email,
+                Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.email = email;

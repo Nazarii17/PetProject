@@ -1,6 +1,6 @@
 package com.tkachuk.pet.services;
 
-import com.tkachuk.pet.entities.Photo;
+import com.tkachuk.pet.entities.OrganizationPhoto;
 import com.tkachuk.pet.repositories.PhotoRepo;
 import com.tkachuk.pet.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +23,15 @@ public class PhotoService {
         this.photoRepo = photoRepo;
     }
 
-    public Photo save(Photo photo) {
-        return photoRepo.save(photo);
+    public OrganizationPhoto save(OrganizationPhoto organizationPhoto) {
+        return photoRepo.save(organizationPhoto);
     }
 
     public void delete(long id) {
         photoRepo.deleteById(id);
     }
 
-    public Photo getOne(Long id) {
+    public OrganizationPhoto getOne(Long id) {
         return photoRepo.getOne(id);
     }
 
@@ -41,14 +41,14 @@ public class PhotoService {
      * @return - Updated version of a Photo;
      * @throws IOException - File error;
      */
-    public Photo update(Long id,
-                        MultipartFile logo) throws IOException {
-        Photo photo = getOne(id);
+    public OrganizationPhoto update(Long id,
+                                    MultipartFile logo) throws IOException {
+        OrganizationPhoto organizationPhoto = getOne(id);
         if (FileUtil.isFileValid(logo)) {
-            updatePhotoName(logo, photo);
+            updatePhotoName(logo, organizationPhoto);
 
         }
-        return save(photo);
+        return save(organizationPhoto);
     }
 
     //TODO how to change?
@@ -59,12 +59,12 @@ public class PhotoService {
      * Then sets a new name to given Photo;
      *
      * @param file  - Given file from UI;
-     * @param photo - Object here should be changed name;
+     * @param organizationPhoto - Object here should be changed name;
      * @throws IOException - File error;
      */
-    public void updatePhotoName(MultipartFile file, Photo photo) throws IOException {
+    public void updatePhotoName(MultipartFile file, OrganizationPhoto organizationPhoto) throws IOException {
         String resultFilename = FileUtil.getResultFilename(file, uploadPath);
         FileUtil.saveFile(uploadPath, file, resultFilename);
-        photo.setName(resultFilename);
+        organizationPhoto.setName(resultFilename);
     }
 }

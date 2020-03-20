@@ -5,7 +5,7 @@ import com.tkachuk.pet.dtos.organization.OrganizationDto;
 import com.tkachuk.pet.dtos.user.UserDto;
 import com.tkachuk.pet.entities.Organization;
 import com.tkachuk.pet.entities.OrganizationType;
-import com.tkachuk.pet.entities.Photo;
+import com.tkachuk.pet.entities.OrganizationPhoto;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.mappers.OrganizationMapper;
 import com.tkachuk.pet.mappers.UserMapper;
@@ -143,7 +143,7 @@ public class OrganizationService {
                 .description(organization.getDescription())
                 .logo(organization.getLogo())
                 .organizationTypes(organization.getOrganizationTypes())
-                .photos(organization.getPhotos())
+                .organizationPhotos(organization.getOrganizationPhotos())
                 .build();
     }
 
@@ -189,7 +189,7 @@ public class OrganizationService {
                 organizationDto.getDescription(),
                 organizationDto.getLogo(),
                 organizationDto.getOrganizationTypes(),
-                organizationDto.getPhotos()
+                organizationDto.getOrganizationPhotos()
         );
     }
 
@@ -256,15 +256,15 @@ public class OrganizationService {
     public Organization addNewPhotos(Long id,
                                      MultipartFile[] photos) throws IOException {
         Organization organization = getOne(id);
-        Set<Photo> organizationPhotos = organization.getPhotos();
+        Set<OrganizationPhoto> organizationOrganizationPhotos = organization.getOrganizationPhotos();
         for (MultipartFile newPhoto : photos) {
-            Photo photo = new Photo();
+            OrganizationPhoto organizationPhoto = new OrganizationPhoto();
             if (FileUtil.isFileValid(newPhoto)) {
-                photoService.updatePhotoName(newPhoto, photo);
-                organizationPhotos.add(photoService.save(photo));
+                photoService.updatePhotoName(newPhoto, organizationPhoto);
+                organizationOrganizationPhotos.add(photoService.save(organizationPhoto));
             }
         }
-        organization.setPhotos(organizationPhotos);
+        organization.setOrganizationPhotos(organizationOrganizationPhotos);
         return save(organization);
     }
 }

@@ -1,8 +1,8 @@
 package com.tkachuk.pet.dtos.organization;
 
 import com.tkachuk.pet.dtos.user.UserDto;
+import com.tkachuk.pet.entities.OrganizationPhoto;
 import com.tkachuk.pet.entities.OrganizationType;
-import com.tkachuk.pet.entities.Photo;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -32,5 +32,5 @@ public class OrganizationDto {
     private String description;
     private String logo;
     private Set<OrganizationType> organizationTypes;
-    private Set<Photo> photos;
+    private Set<OrganizationPhoto> organizationPhotos;
 }

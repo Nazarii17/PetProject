@@ -32,14 +32,14 @@ public class PhotoController {
     @GetMapping("/all/{id}")
     public String getAllPhotosOfOrganization(@PathVariable Long id,
                                              Model model) {
-        model.addAttribute("organizationPhotos", organizationService.getOne(id).getPhotos());
+        model.addAttribute("organizationPhotos", organizationService.getOne(id).getOrganizationPhotos());
         return "organizationPhotos";
     }
 
     //Todo Should it put it to OrgController?
     @PostMapping("/all/{id}")
     public String addPhotos(@PathVariable Long id,
-                            @RequestParam("photos") MultipartFile[] photos
+                            @RequestParam("organizationPhotos") MultipartFile[] photos
     ) throws IOException {
         organizationService.addNewPhotos(id, photos);
         return "redirect:/photos/all/{id}";
