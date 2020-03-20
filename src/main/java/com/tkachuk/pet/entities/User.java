@@ -23,22 +23,24 @@ public class User implements UserDetails {
     @Column(name = "id")
     private Long id;
     @Column(name = "username")
+    @NotBlank(message = "Please fill the Username!")
     private String username;
     @Column(name = "password")
+    @NotBlank(message = "Please fill the Password!")
     private String password;
     @Column(name = "active")
     private boolean active;
+    @Column(name = "email")
+    @Email(message = "Email's not correct!")
+    @NotBlank(message = "Please fill the Email!")
+    private String email;
+    @Column(name = "activationCode")
+    private String activationCode;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-
-    @Column(name = "email")
-    @Email(message = "Email's not correct!")
-    @NotBlank(message = "Email can't be empty!")
-    private String email;
-    @Column(name = "activationCode")
-    private String activationCode;
 
     @Override
     public boolean isAccountNonExpired() {
