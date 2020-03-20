@@ -1,7 +1,9 @@
 package com.tkachuk.pet.services;
 
+import com.tkachuk.pet.dtos.user.UserCommonInfoDto;
 import com.tkachuk.pet.entities.Role;
 import com.tkachuk.pet.entities.User;
+import com.tkachuk.pet.mappers.UserMapper;
 import com.tkachuk.pet.repositories.UserRepo;
 import com.tkachuk.pet.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +29,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
     private final MailSender mailSender;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepo userRepo, MailSender mailSender) {
+    public UserService(UserRepo userRepo, MailSender mailSender, UserMapper userMapper) {
         this.userRepo = userRepo;
         this.mailSender = mailSender;
+        this.userMapper = userMapper;
     }
 
     public List<User> findAll() {
@@ -53,6 +57,36 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username);
+    }
+
+    public void update(UserCommonInfoDto userCommonInfoDto,
+                       Long id,
+                       String password) {
+
+        User userToSave = getOne(id);
+        String userEmail = userToSave.getEmail();
+        User userFromUi = userMapper.toEntity(userCommonInfoDto);
+
+        boolean isEmailChanged = (userFromUi.getEmail() != null && !userFromUi.getEmail().equals(userEmail)) ||
+                (userEmail != null && !userEmail.equals(userFromUi.getEmail()));
+        if (isEmailChanged) {
+            userToSave.setEmail(userFromUi.getEmail());
+            if (!StringUtils.isEmpty(userFromUi.getEmail())) {
+                userToSave.setActivationCode(UUID.randomUUID().toString());
+            }
+        }
+        if (!StringUtils.isEmpty(password)) {
+            userToSave.setPassword(password);
+        }
+
+        userToSave.setUsername(userFromUi.getUsername());
+        userToSave.setPassword(password);
+        userToSave.setRoles(userFromUi.getRoles());
+
+        if (isEmailChanged) {
+            sendMessage(userToSave);
+        }
+        save(userToSave);
     }
 
     public void update(User user,
@@ -149,14 +183,37 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public String getAdditionPageWithErrors(User user,
-                                            BindingResult bindingResult,
-                                            Model model) {
+
+    public String getPageWithErrors(String page,
+                                    UserCommonInfoDto userCommonInfoDto,
+                                    BindingResult bindingResult,
+                                    Model model) {
+
+        Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
+        model.mergeAttributes(errorsMap);
+        model.addAttribute("userCommonInfoDto", userCommonInfoDto);
+        model.addAttribute("roles", Role.values());
+        return page;
+    }
+
+
+    public String getPageWithErrors(String page,
+                                    User user,
+                                    BindingResult bindingResult,
+                                    Model model) {
 
         Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
         model.mergeAttributes(errorsMap);
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
-        return "editUser";
+        return page;
+    }
+
+    public List<UserCommonInfoDto> findAllCommonInfoDto() {
+        return userMapper.toDtoCommonInfoList(userRepo.findAll());
+    }
+
+    public UserCommonInfoDto findCommonInfoDtoById(Long id) {
+        return userMapper.toCommonInfoDto(userRepo.getOne(id));
     }
 }

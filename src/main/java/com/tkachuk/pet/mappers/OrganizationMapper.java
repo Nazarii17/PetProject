@@ -26,14 +26,14 @@ public class OrganizationMapper {
         return mapper.map(organizationCommonInfoDto, Organization.class);
     }
 
-    public OrganizationCommonInfoDto toDtoN(@NonNull Organization organization) {
+    public OrganizationCommonInfoDto toCommonInfoDto(@NonNull Organization organization) {
         return mapper.map(organization, OrganizationCommonInfoDto.class);
     }
 
-    public List<OrganizationCommonInfoDto> toDtoNList(@NonNull Collection<Organization> organizations) {
+    public List<OrganizationCommonInfoDto> toCommonInfoDtoList(@NonNull Collection<Organization> organizations) {
         return organizations
                 .stream()
-                .map(this::toDtoN)
+                .map(this::toCommonInfoDto)
                 .collect(Collectors.toList());
     }
 

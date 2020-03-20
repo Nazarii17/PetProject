@@ -30,7 +30,7 @@
      th:insert="~{fragments/commonNavBar :: #navbar}">
 </div>
 
-<div th:if="${not #lists.isEmpty(users)}">
+<div th:if="${not #lists.isEmpty(usersCommonInfoDtoList)}">
     <table class="table table-hover">
         <h1 class="text-center p-3 mb-2 bg-dark text-white">Users list</h1>
         <thead>
@@ -38,15 +38,15 @@
             <th>ID</th>
             <th>Name</th>
             <th>Roles</th>
-            <th>Password</th>
+            <th>Email</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${users}">
+        <tr th:each="user : ${usersCommonInfoDtoList}">
             <td th:text="${user.id}"></td>
             <td th:text="${user.username}"></td>
             <td th:text="${user.roles}"></td>
-            <td th:text="${user.password}"></td>
+            <td th:text="${user.email}"></td>
             <td>
                 <div class="card-body">
                     <button type="button" class="btn btn-outline-dark">

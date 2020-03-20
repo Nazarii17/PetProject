@@ -2,7 +2,7 @@ package com.tkachuk.pet.services;
 
 import com.tkachuk.pet.dtos.organization.OrganizationCommonInfoDto;
 import com.tkachuk.pet.dtos.organization.OrganizationDto;
-import com.tkachuk.pet.dtos.UserDto;
+import com.tkachuk.pet.dtos.user.UserDto;
 import com.tkachuk.pet.entities.Organization;
 import com.tkachuk.pet.entities.OrganizationType;
 import com.tkachuk.pet.entities.Photo;
@@ -167,7 +167,7 @@ public class OrganizationService {
      * @return - List of all 'OrganizationCommonInfoDto';
      */
     public List<OrganizationCommonInfoDto> findAllCommonInfoDto() {
-        return organizationMapper.toDtoNList(organizationRepo.findAll());
+        return organizationMapper.toCommonInfoDtoList(organizationRepo.findAll());
     }
 
     /**

@@ -42,6 +42,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+
+    public User(Long id, @NotBlank(message = "Please fill the Username!") String username, @Email(message = "Email's not correct!") @NotBlank(message = "Please fill the Email!") String email, Set<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.roles = roles;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

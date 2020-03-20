@@ -29,18 +29,40 @@
 <h1 class="text-center p-3 mb-2 bg-dark text-white">Edit</h1>
 <div class="container">
 
-    <p th:text="${user}"></p>
+    <p th:text="${userCommonInfoDto}"></p>
 
     <form class="editForm "
           enctype="multipart/form-data"
-          th:action="@{/user/edit/{id}(id=${user.id})}"
-          th:object="${user}"
+          th:action="@{/user/edit/{id}(id=${userCommonInfoDto.id})}"
+          th:object="${userCommonInfoDto}"
           th:method="post">
 
-        <div class="container-sm"
-             th:insert="~{fragments/userEditionForm :: #addition-form}">
+        <div
+                th:insert="~{fragments/userEditionForm :: #addition-form}">
         </div>
 
+        <div class="container-sm">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Password:</span>
+                </div>
+                <input type="password"
+                       name="password"
+                       th:class="${passwordError != 'Please fill the Password!'} ? 'form-control is-valid' : 'form-control is-invalid' "
+                       placeholder="Password"/>
+                <!--                    <div class="invalid-feedback">-->
+                <!--                        <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}"-->
+                <!--                               class="validation-message"></label>-->
+                <!--                    </div>-->
+            </div>
+
+            <div class="input-group mb-3"
+                 th:each="role: ${roles}">
+                <input type="checkbox" th:value="${role}" th:field="*{roles}">
+                <label th:class="text-white"
+                       th:text="${role}"></label>
+            </div>
+        </div>
         <p class="text-center">
             <button class="btn btn-outline-light"
                     type="submit">Edit >
@@ -54,7 +76,9 @@
                     class="info">Cancel ></a>
             </button>
         </p>
+
     </form>
+</div>
 </div>
 </body>
 </html>

@@ -4,70 +4,39 @@
 <body>
 
 <div id="addition-form" class="addition-form">
-    <div class="container-fluid">
 
-        <p th:text="${usernameError}"></p>
-
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">ID:</span>
-            </div>
-            <input type="text"
-                   class="form-control is-valid"
-                   th:field="*{id}"
-                   placeholder="ID"/>
+    <div class="input-group mb-3">
+        <input type="hidden"
+               class="form-control is-valid"
+               th:field="*{id}"
+               placeholder="ID"/>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Name:</span>
         </div>
-
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Name:</span>
-            </div>
-            <input type="text"
-                   th:class="${usernameError != 'Please fill the Username!'} ? 'form-control is-valid' : 'form-control is-invalid' "
-                   th:field="*{username}"
-                   placeholder="Name"/>
-            <div class="invalid-feedback">
-                <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
-                       class="validation-message"></label>
-            </div>
+        <input type="text"
+               th:class="${usernameError != 'Please fill the Username!'} ? 'form-control is-valid' : 'form-control is-invalid' "
+               th:field="*{username}"
+               placeholder="Name"/>
+        <div class="invalid-feedback">
+            <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                   class="validation-message"></label>
         </div>
-
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Password:</span>
-            </div>
-            <input type="text"
-                   th:field="*{password}"
-                   th:class="${passwordError != 'Please fill the Password!'} ? 'form-control is-valid' : 'form-control is-invalid' "
-                   placeholder="Password"/>
-            <div class="invalid-feedback">
-                <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
-                       class="validation-message"></label>
-            </div>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Email:</span>
         </div>
-
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Email:</span>
-            </div>
-            <input type="text"
-                   th:field="*{email}"
-                   th:class="${emailError != 'Please fill the Email!'} ? 'form-control is-valid' : 'form-control is-invalid' "
-                   placeholder="Email"/>
-            <div class="invalid-feedback">
-                <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-                       class="validation-message"></label>
-            </div>
+        <input type="text"
+               th:field="*{email}"
+               th:class="${emailError != 'Please fill the Email!'} ? 'form-control is-valid' : 'form-control is-invalid' "
+               placeholder="Email"/>
+        <div class="invalid-feedback">
+            <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                   class="validation-message"></label>
         </div>
-
-        <div th:each="role: ${roles}">
-            <input type="checkbox" th:value="${role}" th:field="*{roles}">
-            <label th:class="text-white"
-                   th:text="${role}"></label>
-        </div>
-
     </div>
 </div>
-
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.tkachuk.pet.controllers;
 
+import com.tkachuk.pet.dtos.user.UserCommonInfoDto;
 import com.tkachuk.pet.entities.Role;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.services.UserService;
@@ -28,15 +29,15 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
     public String userList(Model model) {
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDto());
         return "userList";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/edit/{user}")
-    public String userEditForm(@PathVariable User user,
+    @GetMapping("/edit/{id}")
+    public String userEditForm(@PathVariable("id") Long id,
                                Model model) {
-        model.addAttribute("user", user);
+        model.addAttribute("userCommonInfoDto", userService.findCommonInfoDtoById(id));
         model.addAttribute("roles", Role.values());
         return "editUser";
     }
@@ -44,14 +45,15 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/edit/{id}")
     public String save(@PathVariable("id") Long id,
-                       @Valid User user,
+                       @Valid UserCommonInfoDto userCommonInfoDto,
                        BindingResult bindingResult,
+                       @RequestParam("password") String password,
                        Model model
     ) {
         if (bindingResult.hasErrors()) {
-            return userService.getAdditionPageWithErrors(user, bindingResult, model);
+            return userService.getPageWithErrors("editUser" ,userCommonInfoDto, bindingResult, model);
         } else {
-            userService.update(user, id);
+            userService.update(userCommonInfoDto, id, password);
         }
         return "redirect:/user/all";
     }
@@ -63,6 +65,7 @@ public class UserController {
         return "redirect:/user/all";
     }
 
+    //Todo new DTO
     @GetMapping("/profile")
     public String getProfile(@AuthenticationPrincipal User user,
                              Model model) {
@@ -73,13 +76,18 @@ public class UserController {
         return "profile";
     }
 
-    @PostMapping("profile")
-    public String updateProfile(@AuthenticationPrincipal User user,
-                                @RequestParam String password,
-                                @RequestParam String email
+    //Todo new DTO
+    @PostMapping("/profile/{id}")
+    public String updateProfile(@PathVariable("id") Long id,
+                                @Valid User user,
+                                BindingResult bindingResult,
+                                Model model
     ) {
-        userService.updateProfile(user, password, email);
-
+        if (bindingResult.hasErrors()) {
+            return userService.getPageWithErrors("profile", user, bindingResult, model);
+        } else {
+            userService.update(user, id);
+        }
         return "redirect:/user/profile";
     }
 
