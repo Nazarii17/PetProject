@@ -1,6 +1,5 @@
-package com.tkachuk.pet.dtos.organization;
+package com.tkachuk.pet.dto;
 
-import com.tkachuk.pet.dtos.user.UserDto;
 import com.tkachuk.pet.entities.OrganizationPhoto;
 import com.tkachuk.pet.entities.OrganizationType;
 import lombok.*;

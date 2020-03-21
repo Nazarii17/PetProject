@@ -1,7 +1,7 @@
 package com.tkachuk.pet.mappers;
 
-import com.tkachuk.pet.dtos.user.UserCommonInfoDto;
-import com.tkachuk.pet.dtos.user.UserDto;
+import com.tkachuk.pet.dto.UserCommonInfoDto;
+import com.tkachuk.pet.dto.UserDto;
 import com.tkachuk.pet.entities.User;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;

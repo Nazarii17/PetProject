@@ -1,4 +1,4 @@
-package com.tkachuk.pet.dtos.user;
+package com.tkachuk.pet.dto;
 
 import lombok.Getter;
 import lombok.Setter;

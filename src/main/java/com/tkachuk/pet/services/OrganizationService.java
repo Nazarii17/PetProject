@@ -1,8 +1,8 @@
 package com.tkachuk.pet.services;
 
-import com.tkachuk.pet.dtos.organization.OrganizationCommonInfoDto;
-import com.tkachuk.pet.dtos.organization.OrganizationDto;
-import com.tkachuk.pet.dtos.user.UserDto;
+import com.tkachuk.pet.dto.OrganizationCommonInfoDto;
+import com.tkachuk.pet.dto.OrganizationDto;
+import com.tkachuk.pet.dto.UserDto;
 import com.tkachuk.pet.entities.Organization;
 import com.tkachuk.pet.entities.OrganizationType;
 import com.tkachuk.pet.entities.OrganizationPhoto;
@@ -13,6 +13,7 @@ import com.tkachuk.pet.repositories.OrganizationRepo;
 import com.tkachuk.pet.utils.ControllerUtils;
 import com.tkachuk.pet.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,8 @@ import java.util.Set;
 @Service
 public class OrganizationService {
 
-    @Value("${upload.path}")
+    @Autowired
+    @Qualifier("basePath")
     private String uploadPath;
 
     private final OrganizationRepo organizationRepo;
@@ -76,8 +78,7 @@ public class OrganizationService {
                         MultipartFile file) throws IOException {
 
         if (FileUtil.isFileValid(file)) {
-            String resultFilename = FileUtil.getResultFilename(file, uploadPath);
-            FileUtil.saveFile(uploadPath, file, resultFilename);
+            String resultFilename = FileUtil.saveFile(uploadPath, file);
             organization.setLogo(resultFilename);
         }
     }

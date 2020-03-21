@@ -16,15 +16,18 @@ public class FileUtil {
         return uuidFile + "." + file.getOriginalFilename();
     }
 
-    public static void saveFile(String uploadPath, MultipartFile file, String resultFilename) throws IOException {
-        file.transferTo(new File(uploadPath + File.separator + resultFilename));
+    public static String saveFile(String uploadPath, MultipartFile file) throws IOException {
+        String resultFilename = FileUtil.getFilename(file);
+        File fileToSave = new File(uploadPath + File.separator + resultFilename);
+        file.transferTo(fileToSave);
+        return fileToSave.getPath();
     }
 
     public static String getResultFilename(MultipartFile file, String uploadPath) throws IOException {
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
+        // uploadDir достатньо створити один раз, а цей код виконується кожен раз,
+        // коли викликається метод OrganizationService.setLogo()
+        // Тай метод називається getResultFilename(), а не createUploadDir()
+
         return FileUtil.getFilename(file);
     }
 }

@@ -1,6 +1,6 @@
 package com.tkachuk.pet.services;
 
-import com.tkachuk.pet.dtos.user.UserCommonInfoDto;
+import com.tkachuk.pet.dto.UserCommonInfoDto;
 import com.tkachuk.pet.entities.Role;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.mappers.UserMapper;

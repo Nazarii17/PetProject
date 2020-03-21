@@ -4,6 +4,7 @@ import com.tkachuk.pet.entities.OrganizationPhoto;
 import com.tkachuk.pet.repositories.PhotoRepo;
 import com.tkachuk.pet.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +14,8 @@ import java.io.IOException;
 @Service
 public class PhotoService {
 
-    @Value("${upload.path}")
+    @Autowired
+    @Qualifier("basePath")
     private String uploadPath;
 
     private final PhotoRepo photoRepo;
@@ -51,7 +53,7 @@ public class PhotoService {
         return save(organizationPhoto);
     }
 
-    //TODO how to change?
+    //TODO I don't like the method's name.
     /**
      * Updates a name of a given Photo.
      * Takes a file from user. Changes name using UUID.
@@ -63,8 +65,7 @@ public class PhotoService {
      * @throws IOException - File error;
      */
     public void updatePhotoName(MultipartFile file, OrganizationPhoto organizationPhoto) throws IOException {
-        String resultFilename = FileUtil.getResultFilename(file, uploadPath);
-        FileUtil.saveFile(uploadPath, file, resultFilename);
+        String resultFilename = FileUtil.saveFile(uploadPath, file);
         organizationPhoto.setName(resultFilename);
     }
 }

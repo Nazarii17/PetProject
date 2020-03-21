@@ -1,6 +1,6 @@
 package com.tkachuk.pet.controllers;
 
-import com.tkachuk.pet.dtos.organization.OrganizationDto;
+import com.tkachuk.pet.dto.OrganizationDto;
 import com.tkachuk.pet.entities.OrganizationType;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.services.OrganizationService;

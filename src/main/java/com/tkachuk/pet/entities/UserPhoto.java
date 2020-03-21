@@ -10,14 +10,14 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_photos")
+@Table(name = "user_photo")
 public class UserPhoto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @GeneratedValue
+    @Column
     private Long id;
-    @Column(name = "name")
+    @Column
     private String name;
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "organization_id")

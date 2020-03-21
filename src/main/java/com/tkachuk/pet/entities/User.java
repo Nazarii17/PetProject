@@ -20,28 +20,28 @@ import java.util.Set;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column
     private Long id;
-    @Column(name = "username")
+    @Column
     @NotBlank(message = "Please fill the Username!")
     private String username;
-    @Column(name = "password")
+    @Column
     @NotBlank(message = "Please fill the Password!")
     private String password;
-    @Column(name = "active")
+    @Column
     private boolean active;
-    @Column(name = "email")
+    @Column
     @Email(message = "Email's not correct!")
     @NotBlank(message = "Please fill the Email!")
     private String email;
-    @Column(name = "activationCode")
+    @Column(name = "activation_code")
     private String activationCode;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @OneToMany()
+    @OneToMany
     @JoinColumn(name = "user_id")
     private Set<UserPhoto> userPhotos;
 
@@ -49,7 +49,8 @@ public class User implements UserDetails {
                 @NotBlank(message = "Please fill the Username!") String username,
                 @Email(message = "Email's not correct!")
                 @NotBlank(message = "Please fill the Email!") String email,
-                Set<Role> roles) {
+                Set<Role> roles
+    ) {
         this.id = id;
         this.username = username;
         this.email = email;
