@@ -92,9 +92,9 @@ public class UserController {
     }
 
     @GetMapping(value = "/find-by-name",params = {"wanted-name"})
-    public String findByName(@RequestParam(value = "wanted-name") String wantedName, Model model){
+    public String findByUsernameStartsWith(@RequestParam(value = "wanted-name") String wantedName, Model model){
 
-        model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDtoByName(wantedName));
+        model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDtoUsernameStartsWith(wantedName));
         return "userList";
     }
 
