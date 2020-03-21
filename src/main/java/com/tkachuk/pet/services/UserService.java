@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -30,12 +31,14 @@ public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
     private final MailSender mailSender;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepo userRepo, MailSender mailSender, UserMapper userMapper) {
+    public UserService(UserRepo userRepo, MailSender mailSender, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.mailSender = mailSender;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> findAll() {
@@ -76,11 +79,10 @@ public class UserService implements UserDetailsService {
             }
         }
         if (!StringUtils.isEmpty(password)) {
-            userToSave.setPassword(password);
+            userToSave.setPassword(passwordEncoder.encode(password));
         }
 
         userToSave.setUsername(userFromUi.getUsername());
-        userToSave.setPassword(password);
         userToSave.setRoles(userFromUi.getRoles());
 
         if (isEmailChanged) {
@@ -133,6 +135,7 @@ public class UserService implements UserDetailsService {
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepo.save(user);
 
@@ -151,24 +154,7 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    public void updateProfile(User user, String password, String email) {
-        String userEmail = user.getEmail();
-        boolean isEmailChanged = (email != null && !email.equals(userEmail)) ||
-                (userEmail != null && !userEmail.equals(email));
-        if (isEmailChanged) {
-            user.setEmail(email);
-            if (!StringUtils.isEmpty(email)) {
-                user.setActivationCode(UUID.randomUUID().toString());
-            }
-        }
-        if (!StringUtils.isEmpty(password)) {
-            user.setPassword(password);
-        }
-        userRepo.save(user);
-        if (isEmailChanged) {
-            sendMessage(user);
-        }
-    }
+
 
     private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())) {
