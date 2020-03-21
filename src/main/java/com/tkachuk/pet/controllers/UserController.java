@@ -91,4 +91,11 @@ public class UserController {
         return "redirect:/user/profile";
     }
 
+    @GetMapping(value = "/find-by-name",params = {"wanted-name"})
+    public String findByName(@RequestParam(value = "wanted-name") String wantedName, Model model){
+
+        model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDtoByName(wantedName));
+        return "userList";
+    }
+
 }

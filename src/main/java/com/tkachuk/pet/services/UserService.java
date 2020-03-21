@@ -202,4 +202,8 @@ public class UserService implements UserDetailsService {
     public UserCommonInfoDto findCommonInfoDtoById(Long id) {
         return userMapper.toCommonInfoDto(userRepo.getOne(id));
     }
+
+    public List<UserCommonInfoDto> findAllCommonInfoDtoByName(String wantedName) {
+        return userMapper.toDtoCommonInfoList(userRepo.findAllByUsername(wantedName));
+    }
 }
