@@ -11,11 +11,12 @@
                 <span class="input-group-text">Name:</span>
             </div>
             <input type="text"
-                   th:class="${nameError != 'Please fill the name!'} ? 'form-control is-valid' : 'form-control is-invalid' "
+                   th:class="${nameError == null} ? 'form-control is-valid' : 'form-control is-invalid' "
                    th:field="*{name}"
                    placeholder="Name"/>
-            <div class="invalid-feedback">
-                <p th:text="${nameError}"></p>
+            <div class="invalid-feedback text-center">
+                <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                       class="validation-message text-center"></label>
             </div>
         </div>
         <div class="input-group mb-3">
@@ -23,11 +24,12 @@
                 <span class="input-group-text">Website:</span>
             </div>
             <input type="text"
-                   th:class="${websiteError != 'Please fill the website!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${websiteError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
                    th:field="*{website}"
                    placeholder="Your website"/>
-            <div class="invalid-feedback">
-                <p th:text="${websiteError}"></p>
+            <div class="invalid-feedback text-center">
+                <label th:if="${#fields.hasErrors('website')}" th:errors="*{website}"
+                       class="validation-message text-center"></label>
             </div>
         </div>
         <div class="input-group mb-3">
@@ -35,11 +37,12 @@
                 <span class="input-group-text">Address:</span>
             </div>
             <input type="text"
-                   th:class="${addressError != 'Please fill the address!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${addressError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
                    th:field="*{address}"
                    placeholder="Address"/>
-            <div class="invalid-feedback">
-                <p th:text="${addressError}"></p>
+            <div class="invalid-feedback text-center">
+                <label th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
+                       class="validation-message text-center"></label>
             </div>
         </div>
         <div class="input-group mb-3">
@@ -47,11 +50,12 @@
                 <span class="input-group-text">Phone number:</span>
             </div>
             <input type="text"
-                   th:class="${phoneNumberError != 'Please fill the phoneNumber!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${phoneNumberError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
                    th:field="*{phoneNumber}"
                    placeholder="Organization's phone number"/>
-            <div class="invalid-feedback">
-                <p th:text="${phoneNumberError}"></p>
+            <div class="invalid-feedback text-center">
+                <label th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"
+                       class="validation-message text-center"></label>
             </div>
         </div>
         <div class="input-group mb-3">
@@ -59,7 +63,7 @@
                 <span class="input-group-text">Rating:</span>
             </div>
             <input type="text"
-                   th:class="${ratingError != 'Please fill the rating!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${ratingError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
                    th:field="*{rating}"
                    placeholder="Rating"/>
             <div class="invalid-feedback">
@@ -71,11 +75,12 @@
                 <span class="input-group-text">Description:</span>
             </div>
             <input type="text"
-                   th:class="${descriptionError != 'Please fill the Description!'} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${descriptionError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
                    th:field="*{description}"
                    placeholder="Description"/>
-            <div class="invalid-feedback">
-                <p th:text="${descriptionError}"></p>
+            <div class="invalid-feedback text-center">
+                <label th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+                       class="validation-message text-center"></label>
             </div>
         </div>
         <div class="custom-file mb-3">
