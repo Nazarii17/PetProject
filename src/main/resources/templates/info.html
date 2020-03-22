@@ -41,7 +41,7 @@
                 <div class="container-md">
                     <img class="card-img rounded-circle"
                          style="height:400px;"
-                         th:src="@{'/organizations/' +${organizationDto.logo}}"
+                         th:src="@{'/organizations/uploads/' +${organizationDto.logo}}"
                          alt="Logo"
                     >
                 </div>
@@ -109,14 +109,14 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <img style="height:400px;"
-                                     th:src="@{'/organizations/' + ${organizationDto.organizationPhotos[0].name}}"
+                                     th:src="@{'/organizations/uploads/' + ${organizationDto.organizationPhotos[0].name}}"
                                      class="d-block w-100 rounded-circle" alt="Photo">
                             </div>
                             <!--Skip first element &gt; 1-->
                             <div class="carousel-item" th:each="organizationPhoto, i : ${organizationDto.organizationPhotos}"
                                  th:if="${i.count} &gt; 1">
                                 <img
-                                        th:src="@{'/organizations/' + ${organizationPhoto.name}}"
+                                        th:src="@{'/organizations/uploads/' + ${organizationPhoto.name}}"
                                         class="d-block w-100 rounded-circle"
                                         style="height:400px;"
                                         alt="Photo">

@@ -20,7 +20,7 @@ public class FileUtil {
         String resultFilename = FileUtil.getFilename(file);
         File fileToSave = new File(uploadPath + File.separator + resultFilename);
         file.transferTo(fileToSave);
-        return fileToSave.getPath();
+        return resultFilename;
     }
 
     public static String getResultFilename(MultipartFile file, String uploadPath) throws IOException {
