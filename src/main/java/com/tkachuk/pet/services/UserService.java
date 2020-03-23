@@ -206,4 +206,8 @@ public class UserService implements UserDetailsService {
     public List<UserCommonInfoDto> findAllCommonInfoDtoUsernameStartsWith(String wantedName) {
         return userMapper.toDtoCommonInfoList(userRepo.findByUsernameStartsWith(wantedName));
     }
+
+    public User fromAuthenticationPrincipalToEntity(User APUser){
+        return getOne(APUser.getId());
+    }
 }

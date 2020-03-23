@@ -70,7 +70,7 @@
                 <div class="card ">
                     <span th:if="${organizationCommonInfoDto.logo != null}">
                         <img class="card-img-top img-thumbnail"
-                             th:src="@{'/organizations/uploads/' + ${organizationCommonInfoDto.logo}}"
+                             th:src="@{${organizationCommonInfoDto.logo}}"
                              alt="Logo of organization">
                     </span>
                     <div class="card-body card-body-cascade">

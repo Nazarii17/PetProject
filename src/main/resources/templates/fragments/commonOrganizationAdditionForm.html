@@ -11,7 +11,7 @@
                 <span class="input-group-text">Name:</span>
             </div>
             <input type="text"
-                   th:class="${nameError == null} ? 'form-control is-valid' : 'form-control is-invalid' "
+                   th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control is-valid'"
                    th:field="*{name}"
                    placeholder="Name"/>
             <div class="invalid-feedback text-center">
@@ -24,7 +24,7 @@
                 <span class="input-group-text">Website:</span>
             </div>
             <input type="text"
-                   th:class="${websiteError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${#fields.hasErrors('website')} ? 'form-control is-invalid' : 'form-control is-valid'"
                    th:field="*{website}"
                    placeholder="Your website"/>
             <div class="invalid-feedback text-center">
@@ -37,7 +37,7 @@
                 <span class="input-group-text">Address:</span>
             </div>
             <input type="text"
-                   th:class="${addressError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${#fields.hasErrors('address')} ? 'form-control is-invalid' : 'form-control is-valid'"
                    th:field="*{address}"
                    placeholder="Address"/>
             <div class="invalid-feedback text-center">
@@ -50,7 +50,7 @@
                 <span class="input-group-text">Phone number:</span>
             </div>
             <input type="text"
-                   th:class="${phoneNumberError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${#fields.hasErrors('phoneNumber')} ? 'form-control is-invalid' : 'form-control is-valid'"
                    th:field="*{phoneNumber}"
                    placeholder="Organization's phone number"/>
             <div class="invalid-feedback text-center">
@@ -63,11 +63,12 @@
                 <span class="input-group-text">Rating:</span>
             </div>
             <input type="text"
-                   th:class="${ratingError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${#fields.hasErrors('rating')} ? 'form-control is-invalid' : 'form-control is-valid'"
                    th:field="*{rating}"
                    placeholder="Rating"/>
-            <div class="invalid-feedback">
-                <p th:text="${ratingError}"></p>
+            <div class="invalid-feedback text-center">
+                <label th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"
+                       class="validation-message text-center"></label>
             </div>
         </div>
         <div class="input-group mb-3">
@@ -75,7 +76,7 @@
                 <span class="input-group-text">Description:</span>
             </div>
             <input type="text"
-                   th:class="${descriptionError == null} ? 'form-control is-valid' : 'form-control is-invalid'"
+                   th:class="${#fields.hasErrors('description')} ? 'form-control is-invalid' : 'form-control is-valid'"
                    th:field="*{description}"
                    placeholder="Description"/>
             <div class="invalid-feedback text-center">

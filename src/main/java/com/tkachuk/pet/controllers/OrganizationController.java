@@ -29,12 +29,12 @@ public class OrganizationController {
     @RequestMapping("/all")
     public String getAll(Model model) {
         model.addAttribute("organizationCommonInfoDtoList", organizationService.findAllCommonInfoDto());
-        return "organizationsCommonInfo";
+        return "organizationsListCommonInfo";
     }
 
     @GetMapping("/add")
-    public String save(OrganizationDto organizationDto,
-                       Model model) {
+    public String getAdditionForm(OrganizationDto organizationDto,
+                                  Model model) {
         model.addAttribute("types", OrganizationType.values());
         return "organizationAdd";
     }
@@ -48,15 +48,14 @@ public class OrganizationController {
 
     ) throws IOException {
         if (bindingResult.hasErrors()) {
-            return organizationService.getAdditionPageWithErrors(
-                    organizationDto,
-                    bindingResult,
-                    model);
+            model.addAttribute("organizationDto", organizationDto);
+            model.addAttribute("types", OrganizationType.values());
+            return "organizationAdd";
         } else {
             organizationService.save(user, organizationDto, logo);
             model.addAttribute("message", null);
+            return "redirect:/organizations/all";
         }
-        return "redirect:/organizations/all";
     }
 
     @GetMapping("/info/{id}")
@@ -64,7 +63,7 @@ public class OrganizationController {
                           Model model) {
         model.addAttribute("organizationDto", organizationService.findDtoById(id));
         model.addAttribute("types", OrganizationType.values());
-        return "info";
+        return "infoAboutOrganization";
     }
 
     @PostMapping("/update/{id}")
@@ -76,10 +75,9 @@ public class OrganizationController {
                          Model model
     ) throws IOException {
         if (bindingResult.hasErrors()) {
-            return organizationService.getInfoPageWithErrors(
-                    organizationDto,
-                    bindingResult,
-                    model);
+            model.addAttribute("organizationDto", organizationDto);
+            model.addAttribute("types", OrganizationType.values());
+            return "infoAboutOrganization";
         } else {
             organizationService.update(id, user, organizationDto, logo);
             return "redirect:/organizations/all";

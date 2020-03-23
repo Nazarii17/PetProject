@@ -41,7 +41,7 @@
                 <div class="container-md">
                     <img class="card-img rounded-circle"
                          style="height:400px;"
-                         th:src="@{'/organizations/uploads/' +${organizationDto.logo}}"
+                         th:src="@{${organizationDto.logo}}"
                          alt="Logo"
                     >
                 </div>
@@ -94,7 +94,7 @@
                     </table>
                     <br>
                     <table class="table table-hover">
-                        <tr>
+                        <tr th:if="${organizationDto.author != null}">
                             <th>Edited by:</th>
                             <td th:text="${organizationDto.author.username}"></td>
                         </tr>
@@ -109,14 +109,15 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <img style="height:400px;"
-                                     th:src="@{'/organizations/uploads/' + ${organizationDto.organizationPhotos[0].name}}"
-                                     class="d-block w-100 rounded-circle" alt="Photo">
+                                     th:src="@{${organizationDto.organizationPhotos[0].name}}"
+                                     class="d-block w-100 rounded-circle"
+                                     alt="Photo">
                             </div>
                             <!--Skip first element &gt; 1-->
                             <div class="carousel-item" th:each="organizationPhoto, i : ${organizationDto.organizationPhotos}"
                                  th:if="${i.count} &gt; 1">
                                 <img
-                                        th:src="@{'/organizations/uploads/' + ${organizationPhoto.name}}"
+                                        th:src="@{${organizationPhoto.name}}"
                                         class="d-block w-100 rounded-circle"
                                         style="height:400px;"
                                         alt="Photo">
@@ -182,7 +183,7 @@
                       th:object="${organizationDto}"
                       th:method="post">
                     <div class="container-sm "
-                         th:insert="~{fragments/commonAdditionForm :: #addition-form}">
+                         th:insert="~{fragments/commonOrganizationAdditionForm :: #addition-form}">
                     </div>
                     <p>
                         <button class="btn btn-outline-dark"
