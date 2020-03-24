@@ -98,5 +98,4 @@ public class UserController {
         model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDtoUsernameStartsWith(wantedName));
         return "userList";
     }
-
 }
