@@ -1,11 +1,12 @@
 package com.tkachuk.pet.services;
 
+import com.tkachuk.pet.dto.UserAdditionFormWithNoPasswordDto;
+import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
 import com.tkachuk.pet.dto.UserCommonInfoDto;
 import com.tkachuk.pet.entities.Role;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.mappers.UserMapper;
 import com.tkachuk.pet.repositories.UserRepo;
-import com.tkachuk.pet.utils.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,13 +14,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -82,6 +80,42 @@ public class UserService implements UserDetailsService {
             userToSave.setPassword(passwordEncoder.encode(password));
         }
 
+        userToSave.setUsername(userFromUi.getUsername());
+        userToSave.setRoles(userFromUi.getRoles());
+
+        if (isEmailChanged) {
+            sendMessage(userToSave);
+        }
+        save(userToSave);
+    }
+
+    public void update(UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
+                       Long id) {
+
+        User userToSave = getOne(id);
+        User userFromUi = userMapper.fromUserAdditionFormWithPasswordDtoToEntity(userAdditionFormWithPasswordDto);
+
+        String userEmail = userToSave.getEmail();
+        boolean isEmailChanged = (userFromUi.getEmail() != null && !userFromUi.getEmail().equals(userEmail)) ||
+                (userEmail != null && !userEmail.equals(userFromUi.getEmail()));
+        if (isEmailChanged) {
+
+            if (!StringUtils.isEmpty(userFromUi.getEmail())) {
+                userToSave.setActivationCode(UUID.randomUUID().toString());
+                userToSave.setEmail(userFromUi.getEmail());
+            }
+        }
+
+        String userPassword = userToSave.getPassword();
+        boolean isPasswordChanged = (userFromUi.getPassword() != null && !userFromUi.getPassword().equals(userPassword)) ||
+                (userPassword != null && !userPassword.equals(userFromUi.getPassword()));
+        if (isPasswordChanged){
+            if (!StringUtils.isEmpty(userFromUi.getPassword())) {
+                userToSave.setActivationCode(UUID.randomUUID().toString());
+                userToSave.setPassword(passwordEncoder.encode(userFromUi.getPassword()));
+                sendMessage(userToSave);
+            }
+        }
         userToSave.setUsername(userFromUi.getUsername());
         userToSave.setRoles(userFromUi.getRoles());
 
@@ -154,8 +188,6 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-
-
     private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
@@ -167,32 +199,6 @@ public class UserService implements UserDetailsService {
             );
             mailSender.send(user.getEmail(), "Activation code", message);
         }
-    }
-
-
-    public String getPageWithErrors(String page,
-                                    UserCommonInfoDto userCommonInfoDto,
-                                    BindingResult bindingResult,
-                                    Model model) {
-
-        Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
-        model.mergeAttributes(errorsMap);
-        model.addAttribute("userCommonInfoDto", userCommonInfoDto);
-        model.addAttribute("roles", Role.values());
-        return page;
-    }
-
-
-    public String getPageWithErrors(String page,
-                                    User user,
-                                    BindingResult bindingResult,
-                                    Model model) {
-
-        Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
-        model.mergeAttributes(errorsMap);
-        model.addAttribute("user", user);
-        model.addAttribute("roles", Role.values());
-        return page;
     }
 
     public List<UserCommonInfoDto> findAllCommonInfoDto() {
@@ -209,5 +215,13 @@ public class UserService implements UserDetailsService {
 
     public User fromAuthenticationPrincipalToEntity(User APUser){
         return getOne(APUser.getId());
+    }
+
+    public UserAdditionFormWithPasswordDto findUserAdditionFormWithPasswordDtoById(Long id) {
+        return userMapper.toUserAdditionFormWithPasswordDto(userRepo.getOne(id));
+    }
+
+    public UserAdditionFormWithNoPasswordDto findUserAdditionFormWithNoPasswordDtoById(Long id) {
+        return userMapper.toUserAdditionFormWithNoPasswordDto(userRepo.getOne(id));
     }
 }

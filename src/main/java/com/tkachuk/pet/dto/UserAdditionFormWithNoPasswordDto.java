@@ -9,8 +9,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
-@Getter @Setter @ToString
-public class UserCommonInfoDto {
+@Getter
+@Setter
+@ToString
+public class UserAdditionFormWithNoPasswordDto {
     private Long id;
     @NotBlank(message = "Please fill the Username!")
     private String username;

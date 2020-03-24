@@ -1,5 +1,7 @@
 package com.tkachuk.pet.mappers;
 
+import com.tkachuk.pet.dto.UserAdditionFormWithNoPasswordDto;
+import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
 import com.tkachuk.pet.dto.UserCommonInfoDto;
 import com.tkachuk.pet.dto.UserDto;
 import com.tkachuk.pet.entities.User;
@@ -44,6 +46,24 @@ public class UserMapper {
                 userCommonInfoDto.getEmail(),
                 userCommonInfoDto.getRoles()
         );
+    }
+
+    public User fromUserAdditionFormWithPasswordDtoToEntity(UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto) {
+        return new User(
+                userAdditionFormWithPasswordDto.getId(),
+                userAdditionFormWithPasswordDto.getUsername(),
+                userAdditionFormWithPasswordDto.getPassword(),
+                userAdditionFormWithPasswordDto.getEmail(),
+                userAdditionFormWithPasswordDto.getRoles()
+        );
+    }
+
+    public UserAdditionFormWithPasswordDto toUserAdditionFormWithPasswordDto(User user) {
+        return mapper.map(user, UserAdditionFormWithPasswordDto.class);
+    }
+
+    public UserAdditionFormWithNoPasswordDto toUserAdditionFormWithNoPasswordDto(User user) {
+        return mapper.map(user, UserAdditionFormWithNoPasswordDto.class);
     }
 }
 

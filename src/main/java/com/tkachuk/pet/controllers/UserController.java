@@ -1,6 +1,6 @@
 package com.tkachuk.pet.controllers;
 
-import com.tkachuk.pet.dto.UserCommonInfoDto;
+import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
 import com.tkachuk.pet.entities.Role;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.services.UserService;
@@ -37,7 +37,7 @@ public class UserController {
     @GetMapping("/edit/{id}")
     public String userEditForm(@PathVariable("id") Long id,
                                Model model) {
-        model.addAttribute("userCommonInfoDto", userService.findCommonInfoDtoById(id));
+        model.addAttribute("userAdditionFormWithPasswordDto", userService.findUserAdditionFormWithPasswordDtoById(id));
         model.addAttribute("roles", Role.values());
         return "editUser";
     }
@@ -45,15 +45,16 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/edit/{id}")
     public String save(@PathVariable("id") Long id,
-                       @Valid UserCommonInfoDto userCommonInfoDto,
+                       @Valid UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
                        BindingResult bindingResult,
-                       @RequestParam("password") String password,
-                       Model model
-    ) {
+                       Model model) {
         if (bindingResult.hasErrors()) {
-            return userService.getPageWithErrors("editUser" ,userCommonInfoDto, bindingResult, model);
+            model.addAttribute("userAdditionFormWithPasswordDto", userAdditionFormWithPasswordDto);
+            model.addAttribute("roles", Role.values());
+            return "editUser";
         } else {
-            userService.update(userCommonInfoDto, id, password);
+            System.err.println(userAdditionFormWithPasswordDto);
+            userService.update(userAdditionFormWithPasswordDto, id);
         }
         return "redirect:/user/all";
     }
@@ -81,10 +82,11 @@ public class UserController {
     public String updateProfile(@PathVariable("id") Long id,
                                 @Valid User user,
                                 BindingResult bindingResult,
-                                Model model
-    ) {
+                                Model model) {
         if (bindingResult.hasErrors()) {
-            return userService.getPageWithErrors("profile", user, bindingResult, model);
+            model.addAttribute("user", user);
+            model.addAttribute("roles", Role.values());
+            return "profile";
         } else {
             userService.update(user, id);
         }
@@ -93,7 +95,6 @@ public class UserController {
 
     @GetMapping(value = "/find-by-name",params = {"wanted-name"})
     public String findByUsernameStartsWith(@RequestParam(value = "wanted-name") String wantedName, Model model){
-
         model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDtoUsernameStartsWith(wantedName));
         return "userList";
     }

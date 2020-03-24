@@ -31,7 +31,7 @@ public class User implements UserDetails {
     @Column
     private boolean active;
     @Column
-    @Email(message = "Email's not correct!")
+    @Email(message = "Email is not correct!")
     @NotBlank(message = "Please fill the Email!")
     private String email;
     @Column(name = "activation_code")
@@ -53,6 +53,14 @@ public class User implements UserDetails {
     ) {
         this.id = id;
         this.username = username;
+        this.email = email;
+        this.roles = roles;
+    }
+
+    public User(Long id, @NotBlank(message = "Please fill the Username!") String username, @NotBlank(message = "Please fill the Password!") String password, @Email(message = "Email is not correct!") @NotBlank(message = "Please fill the Email!") String email, Set<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
         this.email = email;
         this.roles = roles;
     }

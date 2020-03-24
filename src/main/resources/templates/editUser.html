@@ -29,31 +29,63 @@
 <h1 class="text-center p-3 mb-2 bg-dark text-white">Edit</h1>
 <div class="container">
 
-    <p th:text="${userCommonInfoDto}"></p>
+    <p th:text="${userAdditionFormWithPasswordDto}"></p>
 
     <form class="editForm "
           enctype="multipart/form-data"
-          th:action="@{/user/edit/{id}(id=${userCommonInfoDto.id})}"
-          th:object="${userCommonInfoDto}"
+          th:action="@{/user/edit/{id}(id=${userAdditionFormWithPasswordDto.id})}"
+          th:object="${userAdditionFormWithPasswordDto}"
           th:method="post">
 
-        <div
-                th:insert="~{fragments/userEditionForm :: #addition-form}">
-        </div>
+        <div id="addition-form" class="addition-form">
 
-        <div class="container-sm">
+            <div class="input-group mb-3">
+                <input type="text"
+                       class="form-control is-valid"
+                       th:field="*{id}"
+                       placeholder="ID"/>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Name:</span>
+                </div>
+                <input type="text"
+                       th:class="${#fields.hasErrors('username')} ? 'form-control is-invalid' : 'form-control is-valid' "
+                       th:field="*{username}"
+                       placeholder="Name"/>
+                <div class="invalid-feedback text-center">
+                    <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                           class="validation-message text-center"></label>
+                </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Email:</span>
+                </div>
+                <input type="text"
+                       th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control is-valid' "
+                       th:field="*{email}"
+                       placeholder="Email"/>
+                <div class="invalid-feedback text-center">
+                    <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                           class="validation-message text-center"></label>
+                </div>
+            </div>
+
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Password:</span>
                 </div>
-                <input type="password"
+                <input type="text"
                        name="password"
-                       th:class="${passwordError != 'Please fill the Password!'} ? 'form-control is-valid' : 'form-control is-invalid' "
+                       th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control is-valid' "
+                       th:field="*{password}"
                        placeholder="Password"/>
-                <!--                    <div class="invalid-feedback">-->
-                <!--                        <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}"-->
-                <!--                               class="validation-message"></label>-->
-                <!--                    </div>-->
+                <div class="invalid-feedback text-center">
+                    <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                           class="validation-message text-center"></label>
+                </div>
             </div>
 
             <div class="input-group mb-3"
@@ -62,7 +94,9 @@
                 <label th:class="text-white"
                        th:text="${role}"></label>
             </div>
+
         </div>
+
         <p class="text-center">
             <button class="btn btn-outline-light"
                     type="submit">Edit >
