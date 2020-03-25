@@ -89,4 +89,11 @@ public class OrganizationController {
         organizationService.delete(id);
         return "redirect:/organizations/all";
     }
+
+    @PostMapping("/change-photo/{id}")
+    public String updateProfilePhoto(@PathVariable("id") Long id,
+                                     @RequestParam("file") MultipartFile photo) throws IOException {
+        organizationService.changeLogo(id,photo);
+        return "redirect:/organizations/info/{id}";
+    }
 }

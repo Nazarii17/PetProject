@@ -74,6 +74,17 @@ public class OrganizationService {
         }
     }
 
+    public void changeLogo(Long id,
+                           MultipartFile file) throws IOException {
+
+        Organization organization = getOne(id);
+        if (FileUtil.isFileValid(file)) {
+            String resultFilename = FileUtil.saveFile(uploadPath, file);
+            organization.setLogo(resultFilename);
+        }
+        save(organization);
+    }
+
     /**
      * Finds and returns a OrganizationDto by given id;
      * Using 'organizationRepo' finds an entity from DB;
@@ -172,7 +183,6 @@ public class OrganizationService {
         organization.setOrganizationPhotos(organizationOrganizationPhotos);
         return save(organization);
     }
-
 
 
 }

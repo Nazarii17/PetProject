@@ -23,6 +23,20 @@
           th:href="@{/css/infoStyle.css}"
           rel="stylesheet"
     />
+    <script>
+        var boo = true;
+
+        function changeImage() {
+            if(boo){
+                document.getElementById("myBestForm").style.display='block';
+                boo = false;
+            } else {
+                document.getElementById("myBestForm").style.display='none';
+                boo = true;
+            }
+        }
+
+    </script>
 
 </head>
 <body>
@@ -43,7 +57,32 @@
                          style="height:400px;"
                          th:src="@{${organizationDto.logo}}"
                          alt="Logo"
+                         onclick="changeImage()"
                     >
+
+                    <form th:action="@{/organizations/change-photo/{id}(id=${organizationDto.id})}"
+                          th:method="post"
+                          enctype="multipart/form-data"
+                          id="myBestForm"
+                          style="display: none">
+                        <br>
+                        <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <br>
+                        <br>
+                        <p class="text-center">
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    data-dismiss="modal">Close
+                            </button>
+                            <button class="btn btn-outline-dark "
+                                    style="color:black"
+                                    type="submit">Change photo >
+                            </button>
+                        </p>
+                    </form>
                 </div>
             </div>
             <div class="col-md-8 ">
@@ -114,7 +153,8 @@
                                      alt="Photo">
                             </div>
                             <!--Skip first element &gt; 1-->
-                            <div class="carousel-item" th:each="organizationPhoto, i : ${organizationDto.organizationPhotos}"
+                            <div class="carousel-item"
+                                 th:each="organizationPhoto, i : ${organizationDto.organizationPhotos}"
                                  th:if="${i.count} &gt; 1">
                                 <img
                                         th:src="@{${organizationPhoto.name}}"
