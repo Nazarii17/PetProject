@@ -1,13 +1,13 @@
 package com.tkachuk.pet.services;
 
-import com.tkachuk.pet.dto.UserAdditionFormWithNoPasswordDto;
-import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
-import com.tkachuk.pet.dto.UserCommonInfoDto;
+import com.tkachuk.pet.dto.*;
 import com.tkachuk.pet.entities.Role;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.mappers.UserMapper;
 import com.tkachuk.pet.repositories.UserRepo;
+import com.tkachuk.pet.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +15,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +25,9 @@ import java.util.UUID;
 @Service
 public class UserService implements UserDetailsService {
 
+    @Autowired
+    @Qualifier("basePath")
+    private String uploadPath;
     @Value("${hostname}")
     private String hostname;
 
@@ -92,37 +97,37 @@ public class UserService implements UserDetailsService {
     public void update(UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
                        Long id) {
 
-        User userToSave = getOne(id);
+        User useFromDb = getOne(id);
         User userFromUi = userMapper.fromUserAdditionFormWithPasswordDtoToEntity(userAdditionFormWithPasswordDto);
 
-        String userEmail = userToSave.getEmail();
+        String userEmail = useFromDb.getEmail();
         boolean isEmailChanged = (userFromUi.getEmail() != null && !userFromUi.getEmail().equals(userEmail)) ||
                 (userEmail != null && !userEmail.equals(userFromUi.getEmail()));
         if (isEmailChanged) {
 
             if (!StringUtils.isEmpty(userFromUi.getEmail())) {
-                userToSave.setActivationCode(UUID.randomUUID().toString());
-                userToSave.setEmail(userFromUi.getEmail());
+                useFromDb.setActivationCode(UUID.randomUUID().toString());
+                useFromDb.setEmail(userFromUi.getEmail());
             }
         }
 
-        String userPassword = userToSave.getPassword();
+        String userPassword = useFromDb.getPassword();
         boolean isPasswordChanged = (userFromUi.getPassword() != null && !userFromUi.getPassword().equals(userPassword)) ||
                 (userPassword != null && !userPassword.equals(userFromUi.getPassword()));
         if (isPasswordChanged){
             if (!StringUtils.isEmpty(userFromUi.getPassword())) {
-                userToSave.setActivationCode(UUID.randomUUID().toString());
-                userToSave.setPassword(passwordEncoder.encode(userFromUi.getPassword()));
-                sendMessage(userToSave);
+                useFromDb.setActivationCode(UUID.randomUUID().toString());
+                useFromDb.setPassword(passwordEncoder.encode(userFromUi.getPassword()));
+                sendMessage(useFromDb);
             }
         }
-        userToSave.setUsername(userFromUi.getUsername());
-        userToSave.setRoles(userFromUi.getRoles());
+        useFromDb.setUsername(userFromUi.getUsername());
+        useFromDb.setRoles(userFromUi.getRoles());
 
         if (isEmailChanged) {
-            sendMessage(userToSave);
+            sendMessage(useFromDb);
         }
-        save(userToSave);
+        save(useFromDb);
     }
 
     public void update(User user,
@@ -223,5 +228,40 @@ public class UserService implements UserDetailsService {
 
     public UserAdditionFormWithNoPasswordDto findUserAdditionFormWithNoPasswordDtoById(Long id) {
         return userMapper.toUserAdditionFormWithNoPasswordDto(userRepo.getOne(id));
+    }
+
+    public UserProfileDto findUserProfileDto(User user) {
+        return userMapper.toUserProfileDto(userRepo.getOne(fromAuthenticationPrincipalToEntity(user).getId()));
+    }
+
+    public void setProfilePhoto(Long id, MultipartFile photo) throws IOException {
+        User user = getOne(id);
+        if (FileUtil.isFileValid(photo)) {
+            String resultFilename = FileUtil.saveFile(uploadPath, photo);
+            user.setProfilePhoto(resultFilename);
+        }
+        save(user);
+    }
+
+    public void updateName(Long id, UserDto userFromUi) {
+        User userFromDb = getOne(id);
+
+        String username = userFromDb.getUsername();
+        boolean isUsernameChanged = (userFromUi.getUsername() != null && !userFromUi.getUsername().equals(username)) ||
+                (username != null && !username.equals(userFromUi.getUsername()));
+
+        if (isUsernameChanged){
+            if (!StringUtils.isEmpty(userFromUi.getUsername())) {
+                userFromDb.setActivationCode(UUID.randomUUID().toString());
+                userFromDb.setUsername(userFromUi.getUsername());
+                sendMessage(userFromDb);
+            }
+        }
+        System.err.println(userFromDb);
+        save(userFromDb);
+    }
+
+    public UserDto findUserDto(User user) {
+        return userMapper.toDto(userRepo.getOne(fromAuthenticationPrincipalToEntity(user).getId()));
     }
 }

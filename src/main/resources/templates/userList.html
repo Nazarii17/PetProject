@@ -30,79 +30,80 @@
      th:insert="~{fragments/commonNavBar :: #navbar}">
 </div>
 <h1 class="text-center p-3 mb-2 bg-dark text-white">Users list</h1>
+<div class="container">
+    <div class="container-sm">
+        <form class="editForm "
+              enctype="multipart/form-data"
+              th:action="@{/user/find-by-name}"
+              th:method="get">
 
-<div class="container-sm">
-    <form class="editForm "
-          enctype="multipart/form-data"
-          th:action="@{/user/find-by-name}"
-          th:method="get">
-
-
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Find by name:</span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Find by name:</span>
+                </div>
+                <input type="text"
+                       name="wanted-name"
+                       th:class="form-control"
+                       placeholder="Wanted name"/>
             </div>
-            <input type="text"
-                   name="wanted-name"
-                   th:class="form-control"
-                   placeholder="Wanted name"/>
-        </div>
 
-        <p class="text-center">
-            <button class="btn btn-outline-dark"
-                    type="submit">Search >
-            </button>
-            <button class="btn btn-outline-dark"
-                    type="reset">Reset >
-            </button>
-            <button type="button" class="btn btn-outline-dark"><a
-                    th:href="@{/user/all}"
-                    style="color:black"
-                    class="info">Cancel ></a>
-            </button>
-        </p>
+            <p class="text-center">
+                <button class="btn btn-outline-dark"
+                        type="submit">Search >
+                </button>
+                <button class="btn btn-outline-dark"
+                        type="reset">Reset >
+                </button>
+                <button type="button" class="btn btn-outline-dark"><a
+                        th:href="@{/user/all}"
+                        style="color:black"
+                        class="info">Cancel ></a>
+                </button>
+            </p>
 
-    </form>
+        </form>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(usersCommonInfoDtoList)}">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Roles</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${usersCommonInfoDtoList}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.roles}"></td>
+                <td th:text="${user.email}"></td>
+                <td>
+                    <div class="card-body">
+                        <button type="button" class="btn btn-outline-dark">
+                            <a style="color:"
+                               th:href="@{/user/edit/{id}(id=${user.id})}"
+                               class="info">Edit
+                            </a>
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <div class="card-body">
+                        <button class="btn btn-outline-dark"
+                                type="button">
+                            <a style="color:black"
+                               th:href="@{/user/delete/{id}(id=${user.id})}">Delete >
+                            </a>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<div th:if="${not #lists.isEmpty(usersCommonInfoDtoList)}">
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Roles</th>
-            <th>Email</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${usersCommonInfoDtoList}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.roles}"></td>
-            <td th:text="${user.email}"></td>
-            <td>
-                <div class="card-body">
-                    <button type="button" class="btn btn-outline-dark">
-                        <a
-                                style="color:"
-                                th:href="@{/user/edit/{id}(id=${user.id})}"
-                                class="info">Edit
-                        </a>
-                    </button>
-                </div>
-            </td>
-            <td>
-                <div class="card-body">
-                    <button class="btn btn-outline-dark"
-                            type="button">
-                        <a style="color:black"
-                           th:href="@{/user/delete/{id}(id=${user.id})}">Delete >
-                        </a>
-                    </button>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+</body>
+</html>

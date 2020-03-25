@@ -28,6 +28,8 @@ public class User implements UserDetails {
     @Column
     @NotBlank(message = "Please fill the Password!")
     private String password;
+    @Column(name = "profile_photo")
+    private String profilePhoto;
     @Column
     private boolean active;
     @Column
@@ -49,8 +51,7 @@ public class User implements UserDetails {
                 @NotBlank(message = "Please fill the Username!") String username,
                 @Email(message = "Email's not correct!")
                 @NotBlank(message = "Please fill the Email!") String email,
-                Set<Role> roles
-    ) {
+                Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -63,6 +64,15 @@ public class User implements UserDetails {
         this.password = password;
         this.email = email;
         this.roles = roles;
+    }
+
+    public User(Long id, @NotBlank(message = "Please fill the Username!") String username, String profilePhoto, @Email(message = "Email is not correct!") @NotBlank(message = "Please fill the Email!") String email, Set<Role> roles, Set<UserPhoto> userPhotos) {
+        this.id = id;
+        this.username = username;
+        this.profilePhoto = profilePhoto;
+        this.email = email;
+        this.roles = roles;
+        this.userPhotos = userPhotos;
     }
 
     @Override

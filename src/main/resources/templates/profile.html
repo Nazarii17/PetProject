@@ -24,34 +24,134 @@
 <div class="NavBar"
      th:insert="~{fragments/commonNavBar :: #navbar}">
 </div>
+<br>
+<div class="container-fluid">
+    <div class="card bg-transparent">
+        <div class="row no-gutters text-center">
+            <div class="col-md-4" th:if=" ${userProfileDto.profilePhoto !=null}">
+                <br>
+                <img class="card-img-top img-thumbnail rounded-circle"
+                     th:src="@{${userProfileDto.profilePhoto}}"
+                     alt="Profile photo of user"
+                     style="height:70%; width:70%">
 
-<div class="container-sm">
-    <form class="editForm "
-          enctype="multipart/form-data"
-          th:action="@{/user/profile/{id}(id=${user.id})}"
-          th:object="${user}"
-          th:method="post">
+                <button type="button"
+                        class="btn btn-outline-dark text-center"
+                        data-toggle="modal"
+                        data-target="#exampleModalCenter">
+                    Change photo >
+                </button>
+                <!-- Modal change photo-->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Change photo</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-center">
 
-        <div class="container-sm"
-             th:insert="~{fragments/userEditionForm :: #addition-form}">
+                                <form th:action="@{/user/profile/change-photo/{id}(id=${userProfileDto.id})}"
+                                      th:method="post"
+                                      enctype="multipart/form-data">
+                                    <div class="custom-file">
+                                        <input type="file" name="file" class="custom-file-input" id="customFile">
+                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <p>
+                                        <button type="button"
+                                                class="btn btn-secondary"
+                                                data-dismiss="modal">Close
+                                        </button>
+                                        <button class="btn btn-outline-dark "
+                                                style="color:black"
+                                                type="submit">Change photo >
+                                        </button>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-8">
+                <div class="card-body ">
+                    <h1 class="card-title text-center">
+                        <span th:text="${userProfileDto.username}"></span>
+                        <button type="button"
+                                class="btn btn-outline-dark btn-sm text-center"
+                                data-toggle="modal"
+                                data-target="#exampleModalCenter1">
+                            Edit name >
+                        </button>
+
+                        <div class="modal fade"
+                             id="exampleModalCenter1"
+                             tabindex="-1"
+                             role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle1">Edit name</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center">
+
+                                        <form th:action="@{/user/profile/change-username/{id}(id=${userProfileDto.id})}"
+                                              th:method="post"
+                                              th:object="${userDto}"
+                                              enctype="multipart/form-data">
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Name:</span>
+                                                </div>
+                                                <input type="text"
+                                                       th:class="${#fields.hasErrors('username')} ? 'form-control is-invalid' : 'form-control is-valid'"
+                                                       th:field="*{username}"
+                                                       placeholder="Username"/>
+                                                <div class="invalid-feedback text-center">
+                                                    <label th:if="${#fields.hasErrors('username')}"
+                                                           th:errors="*{username}"
+                                                           class="validation-message text-center"></label>
+                                                </div>
+                                            </div>
+                                            <p>
+                                                <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-dismiss="modal">Close
+                                                </button>
+                                                <button class="btn btn-outline-dark "
+                                                        style="color:black"
+                                                        type="submit">Save >
+                                                </button>
+                                            </p>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h1>
+
+                </div>
+            </div>
+
         </div>
 
-        <p class="text-center">
-            <button class="btn btn-outline-dark"
-                    type="submit">Save >
-            </button>
-            <button class="btn btn-outline-dark"
-                    type="reset">Reset >
-            </button>
-            <button type="button" class="btn btn-outline-dark"><a
-                    th:href="@{/user/all}"
-                    style="color:black"
-                    class="info">Cancel ></a>
-            </button>
-        </p>
-    </form>
-
-<!--    <p th:text="${user}"></p>-->
+    </div>
 </div>
+
+<p th:text="${userProfileDto}"></p>
+
 </body>
 </html>

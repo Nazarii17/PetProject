@@ -1,9 +1,6 @@
 package com.tkachuk.pet.mappers;
 
-import com.tkachuk.pet.dto.UserAdditionFormWithNoPasswordDto;
-import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
-import com.tkachuk.pet.dto.UserCommonInfoDto;
-import com.tkachuk.pet.dto.UserDto;
+import com.tkachuk.pet.dto.*;
 import com.tkachuk.pet.entities.User;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
@@ -64,6 +61,13 @@ public class UserMapper {
 
     public UserAdditionFormWithNoPasswordDto toUserAdditionFormWithNoPasswordDto(User user) {
         return mapper.map(user, UserAdditionFormWithNoPasswordDto.class);
+    }
+
+    public UserProfileDto toUserProfileDto(User user) {
+        if (user.getProfilePhoto()!=null){
+            user.setProfilePhoto("/organizations/uploads/" + user.getProfilePhoto());
+        }
+        return mapper.map(user, UserProfileDto.class);
     }
 }
 
