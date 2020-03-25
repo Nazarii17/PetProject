@@ -31,7 +31,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
-    public String userList(Model model) {
+    public String getUsersCommonInfoDtoList(Model model) {
         model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDto());
         return "userList";
     }
@@ -47,7 +47,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/edit/{id}")
-    public String save(@PathVariable("id") Long id,
+    public String saveByAdministration(@PathVariable("id") Long id,
                        @Valid UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
                        BindingResult bindingResult,
                        Model model) {
@@ -72,7 +72,7 @@ public class UserController {
     public String getUserProfile(@AuthenticationPrincipal User user,
                                  Model model) {
         model.addAttribute("userProfileDto", userService.getOneUserProfileDto(user.getId()));
-        model.addAttribute("userDto", userService.findUserDto(user));
+        model.addAttribute("userDto", userService.getOneUserDto(user.getId()));
         return "profile";
     }
 

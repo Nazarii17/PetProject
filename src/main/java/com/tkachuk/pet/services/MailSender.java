@@ -1,17 +1,25 @@
 package com.tkachuk.pet.services;
 
 
+import com.tkachuk.pet.utils.Notifications;
+import com.tkachuk.pet.entities.User;
+import com.tkachuk.pet.utils.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 @Service
 public class MailSender {
-    private final JavaMailSender mailSender;
 
+    @Value("${hostname}")
+    private String hostname;
     @Value("${spring.mail.username}")
     private String username;
+
+    private final JavaMailSender mailSender;
 
     @Autowired
     public MailSender(JavaMailSender mailSender) {
@@ -27,5 +35,22 @@ public class MailSender {
         mailMessage.setText(message);
 
         mailSender.send(mailMessage);
+    }
+
+    public void sendNotification(User userFromDb, Notifications updatedName) {
+        send(userFromDb.getEmail(), MailUtil.getSubject(updatedName),MailUtil.getMessage(updatedName));
+    }
+
+    public void sendActivationMessage(User user) {
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format(
+                    "Hello, %s! \n" +
+                            "Welcome on board. Please, visit next link: http://%s/activate/%s",
+                    user.getUsername(),
+                    hostname,
+                    user.getActivationCode()
+            );
+            send(user.getEmail(), "Activation code", message);
+        }
     }
 }

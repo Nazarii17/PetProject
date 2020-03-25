@@ -1,11 +1,16 @@
 package com.tkachuk.pet.services;
 
-import com.tkachuk.pet.dto.*;
+import com.tkachuk.pet.utils.Notifications;
+import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
+import com.tkachuk.pet.dto.UserCommonInfoDto;
+import com.tkachuk.pet.dto.UserDto;
+import com.tkachuk.pet.dto.UserProfileDto;
 import com.tkachuk.pet.entities.Role;
 import com.tkachuk.pet.entities.User;
 import com.tkachuk.pet.mappers.UserMapper;
 import com.tkachuk.pet.repositories.UserRepo;
 import com.tkachuk.pet.utils.FileUtil;
+import com.tkachuk.pet.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +33,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     @Qualifier("userBasePath")
     private String uploadPath;
-    @Value("${hostname}")
-    private String hostname;
+
     @Value("${user.photos.filepath}")
     private String userPhotoFilepath;
 
@@ -50,10 +54,6 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public User findByName(String username) {
-        return userRepo.findByUsername(username);
-    }
-
     public User getOne(Long id) {
         return userRepo.getOne(id);
     }
@@ -69,36 +69,35 @@ public class UserService implements UserDetailsService {
 
     public void update(UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
                        Long id) {
-
-        User useFromDb = getOne(id);
+        User userFromDb = getOne(id);
         User userFromUi = userMapper.toEntity(userAdditionFormWithPasswordDto);
 
-        String userEmail = useFromDb.getEmail();
-        boolean isEmailChanged = (userFromUi.getEmail() != null && !userFromUi.getEmail().equals(userEmail)) ||
-                (userEmail != null && !userEmail.equals(userFromUi.getEmail()));
-        if (isEmailChanged) {
+        if (UserUtil.isEmailChanged(userFromUi, userFromDb.getEmail())) {
             if (!StringUtils.isEmpty(userFromUi.getEmail())) {
-                useFromDb.setActivationCode(UUID.randomUUID().toString());
-                useFromDb.setEmail(userFromUi.getEmail());
+                userFromDb.setActivationCode(UUID.randomUUID().toString());
+                userFromDb.setEmail(userFromUi.getEmail());
+                mailSender.sendNotification(userFromDb, Notifications.EMAIL_UPDATED_BY_ADMINISTRATION);
             }
         }
-        String userPassword = useFromDb.getPassword();
-        boolean isPasswordChanged = (userFromUi.getPassword() != null && !userFromUi.getPassword().equals(userPassword)) ||
-                (userPassword != null && !userPassword.equals(userFromUi.getPassword()));
-        if (isPasswordChanged) {
+        if (!passwordEncoder.matches(userFromUi.getPassword(), userFromDb.getPassword())) {
             if (!StringUtils.isEmpty(userFromUi.getPassword())) {
-                useFromDb.setActivationCode(UUID.randomUUID().toString());
-                useFromDb.setPassword(passwordEncoder.encode(userFromUi.getPassword()));
-                sendMessage(useFromDb);
+                userFromDb.setPassword(passwordEncoder.encode(userFromUi.getPassword()));
+                mailSender.sendNotification(userFromDb, Notifications.PASSWORD_UPDATED_BY_ADMINISTRATION);
             }
         }
-        useFromDb.setUsername(userFromUi.getUsername());
-        useFromDb.setRoles(userFromUi.getRoles());
-
-        if (isEmailChanged) {
-            sendMessage(useFromDb);
+        if (UserUtil.isUsernameChanged(userFromUi, userFromDb.getUsername())) {
+            if (!StringUtils.isEmpty(userFromUi.getUsername())) {
+                userFromDb.setUsername(userFromUi.getUsername());
+                mailSender.sendNotification(userFromDb, Notifications.NAME_UPDATED_BY_ADMINISTRATION);
+            }
         }
-        save(useFromDb);
+        if (UserUtil.areRolesChanged(userFromUi, userFromDb.getRoles())) {
+            if (userFromUi.getRoles().size()>0) {
+                userFromDb.setRoles(userFromUi.getRoles());
+                mailSender.sendNotification(userFromDb, Notifications.ROLE_UPDATED_BY_ADMINISTRATION);
+            }
+        }
+        save(userFromDb);
     }
 
     public void update(User user,
@@ -114,31 +113,8 @@ public class UserService implements UserDetailsService {
         userRepo.deleteById(id);
     }
 
-    /**
-     * Adds user to db with changes of roles, and active;
-     *
-     * @param user - to add to DB;
-     */
-    public void add(User user) {
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        save(user);
-    }
-
-    /**
-     * Checks whether a given user exists in DB;
-     *
-     * @param user - user from UI;
-     * @return - true if user exists in DB;
-     */
-    public boolean isUserExist(User user) {
-        User userFromDb = findByName(user.getUsername());
-        return userFromDb != null;
-    }
-
     public boolean addUser(User user) {
         User userFromDb = userRepo.findByUsername(user.getUsername());
-
         if (userFromDb != null) {
             return false;
         }
@@ -147,7 +123,7 @@ public class UserService implements UserDetailsService {
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
-        sendMessage(user);
+        mailSender.sendActivationMessage(user);
         return true;
     }
 
@@ -159,19 +135,6 @@ public class UserService implements UserDetailsService {
         user.setActivationCode(null);
         userRepo.save(user);
         return true;
-    }
-
-    private void sendMessage(User user) {
-        if (!StringUtils.isEmpty(user.getEmail())) {
-            String message = String.format(
-                    "Hello, %s! \n" +
-                            "Welcome on board. Please, visit next link: http://%s/activate/%s",
-                    user.getUsername(),
-                    hostname,
-                    user.getActivationCode()
-            );
-            mailSender.send(user.getEmail(), "Activation code", message);
-        }
     }
 
     public List<UserCommonInfoDto> findAllCommonInfoDto() {
@@ -199,8 +162,8 @@ public class UserService implements UserDetailsService {
         return userProfileDto;
     }
 
-    public UserDto findUserDto(User user) {
-        return userMapper.toUserDto(userRepo.getOne(user.getId()));
+    public UserDto getOneUserDto(Long id) {
+        return userMapper.toUserDto(userRepo.getOne(id));
     }
 
     /**
@@ -211,12 +174,13 @@ public class UserService implements UserDetailsService {
      * @throws IOException - file errors;
      */
     public void setProfilePhoto(Long id, MultipartFile photo) throws IOException {
-        User user = getOne(id);
+        User userFromDb = getOne(id);
         if (FileUtil.isFileValid(photo)) {
             String resultFilename = FileUtil.saveFile(uploadPath, photo);
-            user.setProfilePhoto(resultFilename);
+            userFromDb.setProfilePhoto(resultFilename);
+            mailSender.sendNotification(userFromDb, Notifications.PROFILE_PHOTO_UPDATED);
         }
-        save(user);
+        save(userFromDb);
     }
 
     /**
@@ -225,7 +189,7 @@ public class UserService implements UserDetailsService {
      * Validates the name;
      * If name was changed send an email to user todo finish user notification;
      *
-     * @param id         - = Id of user whose name should be updated;
+     * @param id         - = ID of user whose name should be updated;
      * @param userFromUi - UserDto which contains an username which should be used;
      */
     public void updateUsername(Long id, UserDto userFromUi) {
@@ -238,7 +202,7 @@ public class UserService implements UserDetailsService {
             if (!StringUtils.isEmpty(userFromUi.getUsername())) {
                 userFromDb.setActivationCode(UUID.randomUUID().toString());
                 userFromDb.setUsername(userFromUi.getUsername());
-                sendMessage(userFromDb);
+                mailSender.sendNotification(userFromDb, Notifications.NAME_UPDATED);
             }
         }
         save(userFromDb);

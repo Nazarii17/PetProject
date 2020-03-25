@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 
 public class ControllerUtils {
 
-
-
     /**
      * Gets errors from bindingResult with addition 'Error' to the end of yhe field;
      * For example name -> nameError;
@@ -25,9 +23,4 @@ public class ControllerUtils {
         );
         return bindingResult.getFieldErrors().stream().collect(collector);
     }
-
-
-
-
-
 }

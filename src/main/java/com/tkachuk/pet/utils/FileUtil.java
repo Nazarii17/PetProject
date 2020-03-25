@@ -22,12 +22,4 @@ public class FileUtil {
         file.transferTo(fileToSave);
         return resultFilename;
     }
-
-    public static String getResultFilename(MultipartFile file, String uploadPath) throws IOException {
-        // uploadDir достатньо створити один раз, а цей код виконується кожен раз,
-        // коли викликається метод OrganizationService.setLogo()
-        // Тай метод називається getResultFilename(), а не createUploadDir()
-
-        return FileUtil.getFilename(file);
-    }
 }
