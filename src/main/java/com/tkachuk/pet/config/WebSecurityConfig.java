@@ -1,6 +1,6 @@
 package com.tkachuk.pet.config;
 
-import com.tkachuk.pet.services.UserService;
+import com.tkachuk.pet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

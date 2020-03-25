@@ -1,7 +1,7 @@
 package com.tkachuk.pet.dto;
 
-import com.tkachuk.pet.entities.OrganizationPhoto;
-import com.tkachuk.pet.entities.OrganizationType;
+import com.tkachuk.pet.entity.OrganizationPhoto;
+import com.tkachuk.pet.entity.OrganizationType;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 

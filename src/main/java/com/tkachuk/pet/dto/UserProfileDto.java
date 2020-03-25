@@ -1,6 +1,6 @@
 package com.tkachuk.pet.dto;
 
-import com.tkachuk.pet.entities.Role;
+import com.tkachuk.pet.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
