@@ -26,10 +26,12 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
 
     @Autowired
-    @Qualifier("basePath")
+    @Qualifier("userBasePath")
     private String uploadPath;
     @Value("${hostname}")
     private String hostname;
+    @Value("${user.photos.filepath}")
+    private String userPhotoFilepath;
 
     private final UserRepo userRepo;
     private final MailSender mailSender;
@@ -65,56 +67,25 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
-    public void update(UserCommonInfoDto userCommonInfoDto,
-                       Long id,
-                       String password) {
-
-        User userToSave = getOne(id);
-        String userEmail = userToSave.getEmail();
-        User userFromUi = userMapper.toEntity(userCommonInfoDto);
-
-        boolean isEmailChanged = (userFromUi.getEmail() != null && !userFromUi.getEmail().equals(userEmail)) ||
-                (userEmail != null && !userEmail.equals(userFromUi.getEmail()));
-        if (isEmailChanged) {
-            userToSave.setEmail(userFromUi.getEmail());
-            if (!StringUtils.isEmpty(userFromUi.getEmail())) {
-                userToSave.setActivationCode(UUID.randomUUID().toString());
-            }
-        }
-        if (!StringUtils.isEmpty(password)) {
-            userToSave.setPassword(passwordEncoder.encode(password));
-        }
-
-        userToSave.setUsername(userFromUi.getUsername());
-        userToSave.setRoles(userFromUi.getRoles());
-
-        if (isEmailChanged) {
-            sendMessage(userToSave);
-        }
-        save(userToSave);
-    }
-
     public void update(UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
                        Long id) {
 
         User useFromDb = getOne(id);
-        User userFromUi = userMapper.fromUserAdditionFormWithPasswordDtoToEntity(userAdditionFormWithPasswordDto);
+        User userFromUi = userMapper.toEntity(userAdditionFormWithPasswordDto);
 
         String userEmail = useFromDb.getEmail();
         boolean isEmailChanged = (userFromUi.getEmail() != null && !userFromUi.getEmail().equals(userEmail)) ||
                 (userEmail != null && !userEmail.equals(userFromUi.getEmail()));
         if (isEmailChanged) {
-
             if (!StringUtils.isEmpty(userFromUi.getEmail())) {
                 useFromDb.setActivationCode(UUID.randomUUID().toString());
                 useFromDb.setEmail(userFromUi.getEmail());
             }
         }
-
         String userPassword = useFromDb.getPassword();
         boolean isPasswordChanged = (userFromUi.getPassword() != null && !userFromUi.getPassword().equals(userPassword)) ||
                 (userPassword != null && !userPassword.equals(userFromUi.getPassword()));
-        if (isPasswordChanged){
+        if (isPasswordChanged) {
             if (!StringUtils.isEmpty(userFromUi.getPassword())) {
                 useFromDb.setActivationCode(UUID.randomUUID().toString());
                 useFromDb.setPassword(passwordEncoder.encode(userFromUi.getPassword()));
@@ -175,11 +146,8 @@ public class UserService implements UserDetailsService {
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         userRepo.save(user);
-
         sendMessage(user);
-
         return true;
     }
 
@@ -207,33 +175,41 @@ public class UserService implements UserDetailsService {
     }
 
     public List<UserCommonInfoDto> findAllCommonInfoDto() {
-        return userMapper.toDtoCommonInfoList(userRepo.findAll());
+        return userMapper.toUserCommonInfoDtoList(userRepo.findAll());
     }
 
-    public UserCommonInfoDto findCommonInfoDtoById(Long id) {
-        return userMapper.toCommonInfoDto(userRepo.getOne(id));
+    public List<UserCommonInfoDto> findAllCommonInfoDtoByUsernameStartsWith(String wantedName) {
+        return userMapper.toUserCommonInfoDtoList(userRepo.findByUsernameStartsWith(wantedName));
     }
 
-    public List<UserCommonInfoDto> findAllCommonInfoDtoUsernameStartsWith(String wantedName) {
-        return userMapper.toDtoCommonInfoList(userRepo.findByUsernameStartsWith(wantedName));
-    }
-
-    public User fromAuthenticationPrincipalToEntity(User APUser){
+    public User fromAuthenticationPrincipalToEntity(User APUser) {
         return getOne(APUser.getId());
     }
 
-    public UserAdditionFormWithPasswordDto findUserAdditionFormWithPasswordDtoById(Long id) {
+    public UserAdditionFormWithPasswordDto getOneUserAdditionFormWithPasswordDtoById(Long id) {
         return userMapper.toUserAdditionFormWithPasswordDto(userRepo.getOne(id));
     }
 
-    public UserAdditionFormWithNoPasswordDto findUserAdditionFormWithNoPasswordDtoById(Long id) {
-        return userMapper.toUserAdditionFormWithNoPasswordDto(userRepo.getOne(id));
+    public UserProfileDto getOneUserProfileDto(Long id) {
+        UserProfileDto userProfileDto = userMapper.toUserProfileDto(userRepo.getOne(id));
+        //todo here or in mapper?
+        if (userProfileDto.getProfilePhoto() != null) {
+            userProfileDto.setProfilePhoto(userPhotoFilepath + userProfileDto.getProfilePhoto());
+        }
+        return userProfileDto;
     }
 
-    public UserProfileDto findUserProfileDto(User user) {
-        return userMapper.toUserProfileDto(userRepo.getOne(fromAuthenticationPrincipalToEntity(user).getId()));
+    public UserDto findUserDto(User user) {
+        return userMapper.toUserDto(userRepo.getOne(user.getId()));
     }
 
+    /**
+     * Sets a given file to User with given Id;
+     *
+     * @param id    = Id of user whose photo should be updated;
+     * @param photo - New photo to set for user profile;
+     * @throws IOException - file errors;
+     */
     public void setProfilePhoto(Long id, MultipartFile photo) throws IOException {
         User user = getOne(id);
         if (FileUtil.isFileValid(photo)) {
@@ -243,25 +219,28 @@ public class UserService implements UserDetailsService {
         save(user);
     }
 
-    public void updateName(Long id, UserDto userFromUi) {
+    /**
+     * Updates an username of user ith given id to username of a given userDto fromUi;
+     * Takes a username of founded user by Id and username of given userDto;
+     * Validates the name;
+     * If name was changed send an email to user todo finish user notification;
+     *
+     * @param id         - = Id of user whose name should be updated;
+     * @param userFromUi - UserDto which contains an username which should be used;
+     */
+    public void updateUsername(Long id, UserDto userFromUi) {
         User userFromDb = getOne(id);
 
         String username = userFromDb.getUsername();
         boolean isUsernameChanged = (userFromUi.getUsername() != null && !userFromUi.getUsername().equals(username)) ||
                 (username != null && !username.equals(userFromUi.getUsername()));
-
-        if (isUsernameChanged){
+        if (isUsernameChanged) {
             if (!StringUtils.isEmpty(userFromUi.getUsername())) {
                 userFromDb.setActivationCode(UUID.randomUUID().toString());
                 userFromDb.setUsername(userFromUi.getUsername());
                 sendMessage(userFromDb);
             }
         }
-        System.err.println(userFromDb);
         save(userFromDb);
-    }
-
-    public UserDto findUserDto(User user) {
-        return userMapper.toDto(userRepo.getOne(fromAuthenticationPrincipalToEntity(user).getId()));
     }
 }

@@ -74,7 +74,7 @@ public class OrganizationMapper {
 
         overwriteLogoPath(organization);
 
-        UserDto userDto = userMapper.toDto(organization.getAuthor());
+        UserDto userDto = userMapper.toUserDto(organization.getAuthor());
 
         return OrganizationDto.builder()
                 .id(organization.getId())

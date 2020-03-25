@@ -21,31 +21,7 @@ public class UserMapper {
         this.mapper = mapper;
     }
 
-    public UserDto toDto(@NonNull User user) {
-        return mapper.map(user, UserDto.class);
-    }
-
-    public List<UserCommonInfoDto> toDtoCommonInfoList(@NonNull Collection<User> users) {
-        return users
-                .stream()
-                .map(this::toCommonInfoDto)
-                .collect(Collectors.toList());
-    }
-
-    public UserCommonInfoDto toCommonInfoDto(User user) {
-        return mapper.map(user, UserCommonInfoDto.class);
-    }
-
-    public User toEntity(UserCommonInfoDto userCommonInfoDto) {
-        return new User(
-                userCommonInfoDto.getId(),
-                userCommonInfoDto.getUsername(),
-                userCommonInfoDto.getEmail(),
-                userCommonInfoDto.getRoles()
-        );
-    }
-
-    public User fromUserAdditionFormWithPasswordDtoToEntity(UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto) {
+    public User toEntity(UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto) {
         return new User(
                 userAdditionFormWithPasswordDto.getId(),
                 userAdditionFormWithPasswordDto.getUsername(),
@@ -55,19 +31,27 @@ public class UserMapper {
         );
     }
 
+    public UserDto toUserDto(@NonNull User user) {
+        return mapper.map(user, UserDto.class);
+    }
+
+    public UserCommonInfoDto toUserCommonInfoDto(User user) {
+        return mapper.map(user, UserCommonInfoDto.class);
+    }
+
     public UserAdditionFormWithPasswordDto toUserAdditionFormWithPasswordDto(User user) {
         return mapper.map(user, UserAdditionFormWithPasswordDto.class);
     }
 
-    public UserAdditionFormWithNoPasswordDto toUserAdditionFormWithNoPasswordDto(User user) {
-        return mapper.map(user, UserAdditionFormWithNoPasswordDto.class);
+    public UserProfileDto toUserProfileDto(User user) {
+        return mapper.map(user, UserProfileDto.class);
     }
 
-    public UserProfileDto toUserProfileDto(User user) {
-        if (user.getProfilePhoto()!=null){
-            user.setProfilePhoto("/organizations/uploads/" + user.getProfilePhoto());
-        }
-        return mapper.map(user, UserProfileDto.class);
+    public List<UserCommonInfoDto> toUserCommonInfoDtoList(@NonNull Collection<User> users) {
+        return users
+                .stream()
+                .map(this::toUserCommonInfoDto)
+                .collect(Collectors.toList());
     }
 }
 

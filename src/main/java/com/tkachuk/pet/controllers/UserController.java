@@ -38,9 +38,9 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/edit/{id}")
-    public String userEditForm(@PathVariable("id") Long id,
+    public String getUserEditForm(@PathVariable("id") Long id,
                                Model model) {
-        model.addAttribute("userAdditionFormWithPasswordDto", userService.findUserAdditionFormWithPasswordDtoById(id));
+        model.addAttribute("userAdditionFormWithPasswordDto", userService.getOneUserAdditionFormWithPasswordDtoById(id));
         model.addAttribute("roles", Role.values());
         return "editUser";
     }
@@ -69,10 +69,9 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String getProfile(@AuthenticationPrincipal User user,
-                             UserDto userDto,
-                             Model model) {
-        model.addAttribute("userProfileDto", userService.findUserProfileDto(user));
+    public String getUserProfile(@AuthenticationPrincipal User user,
+                                 Model model) {
+        model.addAttribute("userProfileDto", userService.getOneUserProfileDto(user.getId()));
         model.addAttribute("userDto", userService.findUserDto(user));
         return "profile";
     }
@@ -94,16 +93,15 @@ public class UserController {
     }
 
     @PostMapping("/profile/change-username/{id}")
-    public String updateName(@AuthenticationPrincipal User user,
-                             @PathVariable("id") Long id,
-                             @Valid UserDto userDto,
-                             BindingResult bindingResult,
-                             Model model) {
+    public String updateUsername(@PathVariable("id") Long id,
+                                 @Valid UserDto userDto,
+                                 BindingResult bindingResult,
+                                 Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("userProfileDto", userService.findUserProfileDto(user));
+            model.addAttribute("userProfileDto", userService.getOneUserProfileDto(id));
             return "profile";
         } else {
-            userService.updateName(id, userDto);
+            userService.updateUsername(id, userDto);
             return "redirect:/user/profile";
         }
     }
@@ -117,7 +115,7 @@ public class UserController {
 
     @GetMapping(value = "/find-by-name", params = {"wanted-name"})
     public String findByUsernameStartsWith(@RequestParam(value = "wanted-name") String wantedName, Model model) {
-        model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDtoUsernameStartsWith(wantedName));
+        model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDtoByUsernameStartsWith(wantedName));
         return "userList";
     }
 }
