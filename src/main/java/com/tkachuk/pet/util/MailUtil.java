@@ -7,6 +7,8 @@ public class MailUtil {
 
     public static String getMessage(Notifications updatedName) {
         switch (updatedName) {
+            case GENDER_UPDATED:
+                return Messages.GENDER_UPDATED_MESSAGE;
             case NAME_UPDATED_BY_ADMINISTRATION:
                 return Messages.NAME_UPDATED_MESSAGE_BY_ADMINISTRATION;
             case ROLE_UPDATED_BY_ADMINISTRATION:

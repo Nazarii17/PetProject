@@ -1,5 +1,6 @@
 package com.tkachuk.pet.util;
 
+import com.tkachuk.pet.entity.Gender;
 import com.tkachuk.pet.entity.Role;
 import com.tkachuk.pet.entity.User;
 
@@ -19,5 +20,10 @@ public class UserUtil {
 
     public static boolean areRolesChanged(User userFromUi, Set<Role> roles) {
         return !roles.containsAll(userFromUi.getRoles()) || !userFromUi.getRoles().containsAll(roles);
+    }
+
+    public static boolean isGenderChanged(User userFromUi, Gender gender) {
+        return (userFromUi.getGender() != null && !userFromUi.getGender().equals(gender)) ||
+                (gender != null && !gender.equals(userFromUi.getGender()));
     }
 }

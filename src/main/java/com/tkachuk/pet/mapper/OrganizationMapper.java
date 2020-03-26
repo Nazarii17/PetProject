@@ -85,8 +85,8 @@ public class OrganizationMapper {
                 .phoneNumber(organization.getPhoneNumber())
                 .rating(organization.getRating())
                 .description(organization.getDescription())
-                .logo(organization.getLogo())//todo fix
-                .organizationTypes(organization.getOrganizationTypes())//todo fix
+                .logo(organization.getLogo())
+                .organizationTypes(organization.getOrganizationTypes())
                 .organizationPhotos(overwriteNames(organization.getOrganizationPhotos()))
                 .build();
     }

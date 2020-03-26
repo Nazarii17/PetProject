@@ -1,6 +1,9 @@
 package com.tkachuk.pet.mapper;
 
-import com.tkachuk.pet.dto.*;
+import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
+import com.tkachuk.pet.dto.UserCommonInfoDto;
+import com.tkachuk.pet.dto.UserDto;
+import com.tkachuk.pet.dto.UserProfileDto;
 import com.tkachuk.pet.entity.User;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
@@ -53,6 +56,11 @@ public class UserMapper {
                 .map(this::toUserCommonInfoDto)
                 .collect(Collectors.toList());
     }
+
+    public User fromUserProfileDtoToEntity(@NonNull UserProfileDto userProfileDto) {
+        return mapper.map(userProfileDto, User.class);
+    }
+
 }
 
 

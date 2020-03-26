@@ -2,6 +2,8 @@ package com.tkachuk.pet.controller;
 
 import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
 import com.tkachuk.pet.dto.UserDto;
+import com.tkachuk.pet.dto.UserProfileDto;
+import com.tkachuk.pet.entity.Gender;
 import com.tkachuk.pet.entity.Role;
 import com.tkachuk.pet.entity.User;
 import com.tkachuk.pet.service.UserService;
@@ -39,7 +41,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/edit/{id}")
     public String getUserEditForm(@PathVariable("id") Long id,
-                               Model model) {
+                                  Model model) {
         model.addAttribute("userAdditionFormWithPasswordDto", userService.getOneUserAdditionFormWithPasswordDtoById(id));
         model.addAttribute("roles", Role.values());
         return "editUser";
@@ -48,9 +50,9 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/edit/{id}")
     public String saveByAdministration(@PathVariable("id") Long id,
-                       @Valid UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
-                       BindingResult bindingResult,
-                       Model model) {
+                                       @Valid UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
+                                       BindingResult bindingResult,
+                                       Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("userAdditionFormWithPasswordDto", userAdditionFormWithPasswordDto);
             model.addAttribute("roles", Role.values());
@@ -74,22 +76,6 @@ public class UserController {
         model.addAttribute("userProfileDto", userService.getOneUserProfileDto(user.getId()));
         model.addAttribute("userDto", userService.getOneUserDto(user.getId()));
         return "profile";
-    }
-
-    //Todo new DTO
-    @PostMapping("/profile/{id}")
-    public String updateProfile(@PathVariable("id") Long id,
-                                @Valid User user,
-                                BindingResult bindingResult,
-                                Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("user", user);
-            model.addAttribute("roles", Role.values());
-            return "profile";
-        } else {
-            userService.update(user, id);
-        }
-        return "redirect:/user/profile";
     }
 
     @PostMapping("/profile/change-username/{id}")
@@ -118,4 +104,30 @@ public class UserController {
         model.addAttribute("usersCommonInfoDtoList", userService.findAllCommonInfoDtoByUsernameStartsWith(wantedName));
         return "userList";
     }
+
+    @GetMapping("/profile/edit/{id}")
+    public String getUserProfileEditForm(@PathVariable("id") Long id,
+                                         @Valid UserProfileDto userProfileDto,
+                                         BindingResult bindingResult,
+                                         Model model) {
+        model.addAttribute("userProfileDto", userService.getOneUserProfileDto(id));
+        model.addAttribute("genders", Gender.values());
+        return "userProfileEdit";
+    }
+
+    @PostMapping("/profile/edit/{id}")
+    public String editUserProfile(@PathVariable("id") Long id,
+                                  @Valid UserProfileDto userProfileDto,
+                                  BindingResult bindingResult,
+                                  Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("userProfileDto", userService.getOneUserProfileDto(id));
+            model.addAttribute("genders", Gender.values());
+            return "userProfileEdit";
+        } else {
+            userService.update(userProfileDto, id);
+        }
+        return "redirect:/user/profile";
+    }
+
 }

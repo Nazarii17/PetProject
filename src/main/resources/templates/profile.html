@@ -28,13 +28,14 @@
 <div class="container-fluid">
     <div class="card bg-transparent">
         <div class="row no-gutters text-center">
-            <div class="col-md-4" th:if=" ${userProfileDto.profilePhoto !=null}">
+            <div class="col-md-4" >
                 <br>
-                <img class="card-img-top img-thumbnail rounded-circle"
+                <img th:if=" ${userProfileDto.profilePhoto !=null}"
+                        class="card-img-top img-thumbnail rounded-circle"
                      th:src="@{${userProfileDto.profilePhoto}}"
                      alt="Profile photo of user"
                      style="height:70%; width:70%">
-
+                <br>
                 <button type="button"
                         class="btn btn-outline-dark text-center"
                         data-toggle="modal"
@@ -78,7 +79,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div class="col-md-8">
@@ -142,6 +142,32 @@
                             </div>
                         </div>
                     </h1>
+
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr th:if=" ${userProfileDto.gender !=null}">
+                            <th>Gender:</th>
+                            <td th:text="${userProfileDto.gender}"></td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td th:text="${userProfileDto.email}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br>
+                    <br>
+                    <p class="text-right">
+                        <button type="button" class="btn btn-outline-dark btn-sm text-right"><a
+                                th:href="@{'/user/profile/edit/' + ${userProfileDto.id}}"
+                                class="text-dark">Edit profile ></a>
+                        </button>
+                    </p>
+
+
+
+
 
                 </div>
             </div>

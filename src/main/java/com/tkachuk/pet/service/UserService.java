@@ -92,7 +92,7 @@ public class UserService implements UserDetailsService {
             }
         }
         if (UserUtil.areRolesChanged(userFromUi, userFromDb.getRoles())) {
-            if (userFromUi.getRoles().size()>0) {
+            if (userFromUi.getRoles().size() > 0) {
                 userFromDb.setRoles(userFromUi.getRoles());
                 mailSender.sendNotification(userFromDb, Notifications.ROLE_UPDATED_BY_ADMINISTRATION);
             }
@@ -100,13 +100,31 @@ public class UserService implements UserDetailsService {
         save(userFromDb);
     }
 
-    public void update(User user,
+    public void update(UserProfileDto userProfileDto,
                        Long id) {
-        User userToSave = getOne(id);
-        userToSave.setUsername(user.getUsername());
-        userToSave.setPassword(user.getPassword());
-        userToSave.setRoles(user.getRoles());
-        save(userToSave);
+        User userFromDb = getOne(id);
+        User userFromUi = userMapper.fromUserProfileDtoToEntity(userProfileDto);
+
+        if (UserUtil.isEmailChanged(userFromUi, userFromDb.getEmail())) {
+            if (!StringUtils.isEmpty(userFromUi.getEmail())) {
+                userFromDb.setActivationCode(UUID.randomUUID().toString());
+                userFromDb.setEmail(userFromUi.getEmail());
+                mailSender.sendNotification(userFromDb, Notifications.EMAIL_UPDATED);
+            }
+        }
+        if (UserUtil.isUsernameChanged(userFromUi, userFromDb.getUsername())) {
+            if (!StringUtils.isEmpty(userFromUi.getUsername())) {
+                userFromDb.setUsername(userFromUi.getUsername());
+                mailSender.sendNotification(userFromDb, Notifications.NAME_UPDATED);
+            }
+        }
+        if (UserUtil.isGenderChanged(userFromUi, userFromDb.getGender())) {
+            if (!StringUtils.isEmpty(userFromUi.getGender())) {
+                userFromDb.setGender(userFromUi.getGender());
+                mailSender.sendNotification(userFromDb, Notifications.GENDER_UPDATED);
+            }
+        }
+        save(userFromDb);
     }
 
     public void deleteById(long id) {
