@@ -17,6 +17,9 @@ public class FileStorageConfig {
     @Value("${upload.user.path}")
     private String userBaseDir;
 
+    @Value("${upload.user.photos.path}")
+    private String userPhotosBaseDir;
+
     @Bean(name = "basePath")
     public String basePath() {
         //TODO File baseDir = new File(baseDir); ?????
@@ -29,11 +32,21 @@ public class FileStorageConfig {
     }
 
     @Bean(name = "userBasePath")
-    public String userBasePath() {
+    public String userProfilePhotoBasePath() {
         File baseDir = new File(userBaseDir);
         if (!baseDir.exists()) {
             baseDir.mkdirs();
             log.info("userBasePath '" + userBaseDir + "' created: ", baseDir.getAbsolutePath());
+        }
+        return baseDir.getAbsolutePath();
+    }
+    
+    @Bean(name = "userPhotosBasePath")
+    public String userPhotosBasePath() {
+        File baseDir = new File(userPhotosBaseDir);
+        if (!baseDir.exists()) {
+            baseDir.mkdirs();
+            log.info("userBasePath '" + userPhotosBaseDir + "' created: ", baseDir.getAbsolutePath());
         }
         return baseDir.getAbsolutePath();
     }

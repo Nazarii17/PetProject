@@ -57,10 +57,9 @@ public class UserMapper {
                 .collect(Collectors.toList());
     }
 
-    public User fromUserProfileDtoToEntity(@NonNull UserProfileDto userProfileDto) {
-        return mapper.map(userProfileDto, User.class);
+    public <F> User toEntity(@NonNull F f) {
+        return mapper.map(f, User.class);
     }
-
 }
 
 
