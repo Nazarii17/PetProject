@@ -84,16 +84,13 @@
                        class="validation-message text-center"></label>
             </div>
         </div>
-        <div class="custom-file mb-3">
-            <input type="file" name="file" id="customFile">
-            <label class="custom-file-label" for="customFile">Choose logo</label>
-        </div>
+
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">Type:</span>
             </div>
             <select th:field="*{organizationTypes}">
-                <option th:each="type : ${types}"
+                <option th:each="type : ${organizationTypes}"
                         th:value="${type}"
                         th:text="${type}"
                 ></option>

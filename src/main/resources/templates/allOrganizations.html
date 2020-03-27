@@ -40,7 +40,7 @@
      th:insert="~{fragments/commonNavBar :: #navbar}">
 </div>
 
-<div th:if="${not #lists.isEmpty(organizationCommonInfoDtoList)}">
+<div th:if="${not #lists.isEmpty(organizations)}">
     <table class="table table-hover">
         <h1 class="text-center p-3 mb-2 bg-dark text-white">Organizations list</h1>
         <thead>
@@ -52,51 +52,49 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="organizationCommonInfoDto : ${organizationCommonInfoDtoList}">
-            <td th:text="${organizationCommonInfoDto.id}"></td>
-            <td th:text="${organizationCommonInfoDto.name}"></td>
-            <td th:text="${organizationCommonInfoDto.website}"></td>
-            <td th:text="${organizationCommonInfoDto.rating}"></td>
+        <tr th:each="organization : ${organizations}">
+            <td th:text="${organization.id}"></td>
+            <td th:text="${organization.name}"></td>
+            <td th:text="${organization.website}"></td>
+            <td th:text="${organization.rating}"></td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<div th:if="${not #lists.isEmpty(organizationCommonInfoDtoList)}">
+<div th:if="${not #lists.isEmpty(organizations)}">
     <div class="container">
         <div class="card-columns">
-            <div th:each="organizationCommonInfoDto : ${organizationCommonInfoDtoList}">
+            <div th:each="organization : ${organizations}">
 
                 <div class="card ">
-                    <span th:if="${organizationCommonInfoDto.logo != null}">
+                    <span th:if="${organization.logo != null}">
                         <img class="card-img-top img-thumbnail"
-                             th:src="@{${organizationCommonInfoDto.logo}}"
+                             th:src="@{${organization.logo}}"
                              alt="Logo of organization">
                     </span>
-                    <div class="card-body card-body-cascade">
-                        <h5 class="card-title" th:text="${organizationCommonInfoDto.name}"></h5>
-                        <small class="text-muted" th:text="${organizationCommonInfoDto.description}"></small>
+                    <div class="card-body card-body-cascade ">
+                        <a th:href="@{'/organizations/info/' + ${organization.id}}"
+                           class="font-weight-bold "
+                           th:text="${organization.name}" ></a>
+                        <br>
+                        <small class="text-muted" th:text="${organization.description}"></small>
                     </div>
                     <ul class="list-group list-group-flush">
                         <table class="table table-hover">
                             <tbody>
                             <tr>
                                 <th>Website:</th>
-                                <td th:text="${organizationCommonInfoDto.website}"></td>
+                                <td th:text="${organization.website}"></td>
                             </tr>
                             <tr>
                                 <th>Rating:</th>
-                                <td th:text="${organizationCommonInfoDto.rating}"></td>
+                                <td th:text="${organization.rating}"></td>
                             </tr>
                             </tbody>
                         </table>
                     </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-outline-dark"><a
-                                th:href="@{'/organizations/info/' + ${organizationCommonInfoDto.id}}"
-                                class="info">Info</a>
-                        </button>
-                    </div>
+
                 </div>
             </div>
         </div>
