@@ -23,6 +23,8 @@
           th:href="@{/css/infoStyle.css}"
           rel="stylesheet"
     />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
         var boo = true;
 
@@ -51,16 +53,47 @@
 <div class="container-fluid">
     <div class="card bg-transparent ">
         <div class="row no-gutters">
-            <div class="col-md-4" th:if="${organizationDto.logo != null}">
+
+            <div class="col-md-4 " th:if="${organization.logo == null}">
+
+                <button data-toggle="collapse" class="btn btn-outline-dark" data-target="#demo">Add logo ></button>
+
+                <div id="demo" class="collapse">
+                    <form th:action="@{/organizations/change-photo/{id}(id=${organization.id})}"
+                          th:method="post"
+                          enctype="multipart/form-data">
+                        <br>
+                        <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <br>
+                        <br>
+                        <p class="text-center">
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    data-dismiss="modal">Close
+                            </button>
+                            <button class="btn btn-outline-dark "
+                                    style="color:black"
+                                    type="submit">Change photo >
+                            </button>
+                        </p>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="col-md-4" th:if="${organization.logo != null}">
                 <div class="container-md">
                     <img class="card-img rounded-circle"
                          style="height:400px;"
-                         th:src="@{${organizationDto.logo}}"
+                         th:src="@{${organization.logo}}"
                          alt="Logo"
                          onclick="changeImage()"
                     >
 
-                    <form th:action="@{/organizations/change-photo/{id}(id=${organizationDto.id})}"
+                    <form th:action="@{/organizations/change-photo/{id}(id=${organization.id})}"
                           th:method="post"
                           enctype="multipart/form-data"
                           id="myBestForm"
@@ -88,28 +121,50 @@
             <div class="col-md-8 ">
                 <div class="card-body ">
                     <h1 class="card-title">
-                        <span th:text="${organizationDto.name}"></span>
+                        <span th:text="${organization.name}"></span>
                     </h1>
                     <table class="table table-hover">
                         <tbody>
                         <tr>
                             <th>Website:</th>
-                            <td th:text="${organizationDto.website}"></td>
+                            <td th:text="${organization.website}"></td>
                         </tr>
                         <tr>
                             <th>Address:</th>
-                            <td th:text="${organizationDto.address}"></td>
+                            <td th:text="${organization.address}"></td>
                         </tr>
                         <tr>
                             <th>Phone Number:</th>
-                            <td th:text="${organizationDto.phoneNumber}"></td>
+                            <td th:text="${organization.phoneNumber}"></td>
                         </tr>
                         <tr>
                             <th>Rating:</th>
-                            <td th:text="${organizationDto.rating}"></td>
+                            <td th:text="${organization.rating}"></td>
                         </tr>
                         </tbody>
                     </table>
+                    <br>
+                    <p >
+                        <button class="btn btn-outline-dark"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#collapseOne"
+                                aria-expanded="true"
+                                aria-controls="collapseOne">Edit <span th:text="${organization.name} + ' >'"><span> ></span></span>
+                        </button>
+                        <button class="btn btn-outline-dark"
+                                type="button">
+                            <a th:href="@{/organizations/delete/{id}(id=${organization.id})}"
+                               class="text-dark"
+                            >
+                                Delete >
+                            </a>
+                        </button>
+                        <button type="button" class="btn btn-outline-dark"><a
+                                th:href="@{'/photos/all/' + ${organization.id}}"
+                                class="text-dark">Change photos ></a>
+                        </button>
+                    </p>
                 </div>
             </div>
         </div>
@@ -127,34 +182,34 @@
                         <tbody>
                         <h1 class="card-title">Description:</h1>
                         <tr>
-                            <td th:text="${organizationDto.description}"></td>
+                            <td th:text="${organization.description}"></td>
                         </tr>
                         </tbody>
                     </table>
                     <br>
                     <table class="table table-hover">
-                        <tr th:if="${organizationDto.author != null}">
+                        <tr th:if="${organization.author != null}">
                             <th>Edited by:</th>
-                            <td th:text="${organizationDto.author.username}"></td>
+                            <td th:text="${organization.author.username}"></td>
                         </tr>
                     </table>
                 </div>
             </div>
             <div class="col-md-4"
-                 th:if="${not #lists.isEmpty(organizationDto.organizationPhotos)}">
+                 th:if="${not #lists.isEmpty(organization.organizationPhotos)}">
                 <div class="container-md">
                     <!--Carousel to display all organizationPhotos of the organization-->
                     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <img style="height:400px;"
-                                     th:src="@{${organizationDto.organizationPhotos[0].name}}"
+                                     th:src="@{${organization.organizationPhotos[0].name}}"
                                      class="d-block w-100 rounded-circle"
                                      alt="Photo">
                             </div>
                             <!--Skip first element &gt; 1-->
                             <div class="carousel-item"
-                                 th:each="organizationPhoto, i : ${organizationDto.organizationPhotos}"
+                                 th:each="organizationPhoto, i : ${organization.organizationPhotos}"
                                  th:if="${i.count} &gt; 1">
                                 <img
                                         th:src="@{${organizationPhoto.name}}"
@@ -184,31 +239,9 @@
 
 </div>
 <!--Info-->
-<p th:text="${organizationDto}"></p>
+<p th:text="${organization}"></p>
 <!--Edit collapse-->
 <div class="accordion text-center" id="accordionExample">
-
-    <p>
-        <button class="btn btn-outline-dark"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne">Edit <span th:text="${organizationDto.name} + ' >'"><span> ></span></span>
-        </button>
-        <button class="btn btn-outline-dark"
-                type="button">
-            <a th:href="@{/organizations/delete/{id}(id=${organizationDto.id})}"
-               class="text-dark"
-            >
-                Delete >
-            </a>
-        </button>
-        <button type="button" class="btn btn-outline-dark"><a
-                th:href="@{'/photos/all/' + ${organizationDto.id}}"
-                class="text-dark">Change photos ></a>
-        </button>
-    </p>
 
     <div class="card p-0 mb-0 bg-transparent">
         <div id="collapseOne"
@@ -219,8 +252,8 @@
                 <!--Edit form-->
                 <form class="editForm"
                       enctype="multipart/form-data"
-                      th:action="@{/organizations/update/{id}(id=${organizationDto.id})}"
-                      th:object="${organizationDto}"
+                      th:action="@{/organizations/info/update/{id}(id=${organization.id})}"
+                      th:object="${organization}"
                       th:method="post">
                     <div class="container-sm "
                          th:insert="~{fragments/commonOrganizationAdditionForm :: #addition-form}">

@@ -1,6 +1,7 @@
 package com.tkachuk.pet.controller;
 
 import com.tkachuk.pet.dto.OrganizationDto;
+import com.tkachuk.pet.dto.OrganizationProfileDto;
 import com.tkachuk.pet.entity.OrganizationType;
 import com.tkachuk.pet.entity.User;
 import com.tkachuk.pet.service.OrganizationService;
@@ -28,58 +29,53 @@ public class OrganizationController {
 
     @RequestMapping("/all")
     public String getAll(Model model) {
-        model.addAttribute("organizationCommonInfoDtoList", organizationService.findAllCommonInfoDto());
-        return "organizationsListCommonInfo";
+        model.addAttribute("organizations", organizationService.findAll());
+        return "allOrganizations";
     }
 
     @GetMapping("/add")
-    public String getAdditionForm(OrganizationDto organizationDto,
+    public String getAdditionForm(OrganizationDto organization,
                                   Model model) {
-        model.addAttribute("types", OrganizationType.values());
-        return "organizationAdd";
+        model.addAttribute("organizationTypes", OrganizationType.values());
+        return "addOrganization";
     }
 
     @PostMapping("/add")
-    public String save(@AuthenticationPrincipal User user,//todo User/userDto?
-                       @Valid OrganizationDto organizationDto,
+    public String save(@AuthenticationPrincipal User user,
+                       @Valid OrganizationDto organization,
                        BindingResult bindingResult,
-                       Model model,
-                       @RequestParam("file") MultipartFile logo
-
-    ) throws IOException {
+                       Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("organizationDto", organizationDto);
-            model.addAttribute("types", OrganizationType.values());
-            return "organizationAdd";
+            model.addAttribute("organization", organization);
+            model.addAttribute("organizationTypes", OrganizationType.values());
+            return "addOrganization";
         } else {
-            organizationService.save(user, organizationDto, logo);
-            model.addAttribute("message", null);
+            organizationService.save(user, organization);
             return "redirect:/organizations/all";
         }
     }
 
     @GetMapping("/info/{id}")
     public String getInfo(@PathVariable Long id,
+                          OrganizationProfileDto organization,
                           Model model) {
-        model.addAttribute("organizationDto", organizationService.findDtoById(id));
-        model.addAttribute("types", OrganizationType.values());
-        return "infoAboutOrganization";
+        model.addAttribute("organization", organizationService.findById(id));
+        model.addAttribute("organizationTypes", OrganizationType.values());
+        return "infoOrganization";
     }
 
-    @PostMapping("/update/{id}")
-    public String update(@PathVariable("id") Long id,
-                         @AuthenticationPrincipal User user,
-                         @Valid OrganizationDto organizationDto,
-                         BindingResult bindingResult,
-                         @RequestParam("file") MultipartFile logo,
-                         Model model
-    ) throws IOException {
+    @PostMapping("/info/update/{id}")
+    public String updateInfo(@PathVariable("id") Long id,
+                             @AuthenticationPrincipal User user,
+                             @Valid OrganizationProfileDto organization,
+                             BindingResult bindingResult,
+                             Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("organizationDto", organizationDto);
-            model.addAttribute("types", OrganizationType.values());
+            model.addAttribute("organization", organizationService.findById(id));
+            model.addAttribute("organizationTypes", OrganizationType.values());
             return "infoAboutOrganization";
         } else {
-            organizationService.update(id, user, organizationDto, logo);
+            organizationService.update(id, user, organization);
             return "redirect:/organizations/all";
         }
     }
@@ -93,7 +89,7 @@ public class OrganizationController {
     @PostMapping("/change-photo/{id}")
     public String updateProfilePhoto(@PathVariable("id") Long id,
                                      @RequestParam("file") MultipartFile photo) throws IOException {
-        organizationService.changeLogo(id,photo);
+        organizationService.changeLogo(id, photo);
         return "redirect:/organizations/info/{id}";
     }
 }
