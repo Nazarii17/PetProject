@@ -1,7 +1,6 @@
 package com.tkachuk.pet.controller;
 
 
-import com.tkachuk.pet.entity.User;
 import com.tkachuk.pet.service.MailSender;
 import com.tkachuk.pet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,21 +34,27 @@ public class MailController {
     public String sendToAll(@RequestParam(value = "message") String message,
                             @RequestParam(value = "subject") String subject) {
 
-        for (User user : userService.findAll()){
-            mailSender.send(user.getEmail(), subject, message);
-        }
-
+        mailSender.sendToAll(message, subject);
         return "redirect:/email/to-all";
     }
-
 
     @PostMapping("/to-one")
     public String sendToOne(@RequestParam(value = "email") String email,
                             @RequestParam(value = "message") String message,
                             @RequestParam(value = "subject") String subject) {
 
-            mailSender.send(email, subject, message);
+        mailSender.send(email, subject, message);
 
         return "redirect:/email/to-all";
     }
+
+//    @PostMapping("/to-one")
+//    public ResponseEntity<String> sendToOne(@RequestParam(value = "email") String email,
+//                                    @RequestParam(value = "message") String message,
+//                                    @RequestParam(value = "subject") String subject) {
+//
+//        mailSender.send(email, subject, message);
+//
+//        return ResponseEntity.ok(message);
+//    }
 }
