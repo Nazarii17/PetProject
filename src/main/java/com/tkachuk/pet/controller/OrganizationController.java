@@ -92,4 +92,35 @@ public class OrganizationController {
         organizationService.changeLogo(id, photo);
         return "redirect:/organizations/info/{id}";
     }
+
+    @GetMapping("/{id}/photos/all")
+    public String getAllPhotosOfOrganization(@PathVariable Long id,
+                                             Model model) {
+        model.addAttribute("organizationPhotos", organizationService.findAllPhotosByOrganizationId(id));
+        return "organizationPhotos";
+    }
+
+    @PostMapping("/photos/all")
+    public String addPhotos(@RequestParam(value = "organizationId") Long id,
+                            @RequestParam("organizationPhotos") MultipartFile[] photos) {
+        organizationService.addNewPhotos(id, photos);
+        return "redirect:/organizations/" + id + "/photos/all";
+    }
+
+    @PostMapping("/photos/change/{id}")
+    public String updatePhoto(@PathVariable("id") Long id,
+                              @RequestParam("file") MultipartFile file,
+                              @RequestParam(value = "organizationId") Long orgId
+    ) throws IOException {
+        organizationService.updatePhoto(id, file);
+        return "redirect:/organizations/" + orgId + "/photos/all";
+    }
+
+    @PostMapping("/photos/delete/{id}")
+    public String deletePhoto(@PathVariable("id") long id,
+                              @RequestParam(value = "organizationId") Long orgId) {
+        organizationService.deletePhoto(id);
+        return "redirect:/organizations/" + orgId + "/photos/all";
+    }
+
 }
