@@ -2,7 +2,6 @@ package com.tkachuk.pet.controller;
 
 
 import com.tkachuk.pet.service.MailSender;
-import com.tkachuk.pet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ public class MailController {
     private final MailSender mailSender;
 
     @Autowired
-    public MailController(MailSender mailSender, UserService userService) {
+    public MailController(MailSender mailSender) {
         this.mailSender = mailSender;
     }
 
