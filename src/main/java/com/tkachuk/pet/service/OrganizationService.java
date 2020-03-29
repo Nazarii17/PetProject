@@ -6,11 +6,12 @@ import com.tkachuk.pet.entity.Organization;
 import com.tkachuk.pet.entity.OrganizationPhoto;
 import com.tkachuk.pet.entity.User;
 import com.tkachuk.pet.mapper.OrganizationMapper;
+import com.tkachuk.pet.provider.FilePaths;
 import com.tkachuk.pet.repository.OrganizationRepo;
 import com.tkachuk.pet.util.FileUtil;
+import com.tkachuk.pet.util.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,16 +28,12 @@ public class OrganizationService {
     @Qualifier("organizationLogoFilepath")
     private String uploadLogoPath;
 
-    @Value("${filepath.photo.organization.logos}")
-    private String organizationLogoFilepath;
-
     @Autowired
     @Qualifier("organizationPhotosFilepath")
     private String uploadPhotosPath;
 
-    @Value("${filepath.photo.organization.photos}")
-    private String organizationPhotosFilepath;
-
+    private static final String ORGANIZATION_LOGO_FILEPATH = UrlUtil.getUrl(FilePaths.ORGANIZATION_LOGO_FILEPATH);
+    private static final String ORGANIZATION_PHOTOS_FILEPATH = UrlUtil.getUrl(FilePaths.ORGANIZATION_PHOTOS_FILEPATH);
 
     private final OrganizationRepo organizationRepo;
     private final OrganizationMapper organizationMapper;
@@ -118,10 +115,10 @@ public class OrganizationService {
     }
 
     public OrganizationProfileDto overwriteFilePaths(OrganizationProfileDto organizationProfileDto) {
-        organizationProfileDto = overwriteLogoPath(organizationLogoFilepath, organizationProfileDto);
+        organizationProfileDto = overwriteLogoPath(ORGANIZATION_LOGO_FILEPATH, organizationProfileDto);
 
         Set<OrganizationPhoto> organizationPhotos = organizationProfileDto.getOrganizationPhotos();
-        organizationProfileDto.setOrganizationPhotos(overwritePhotoPaths(organizationPhotos, organizationPhotosFilepath));
+        organizationProfileDto.setOrganizationPhotos(overwritePhotoPaths(organizationPhotos, ORGANIZATION_PHOTOS_FILEPATH));
 
         return organizationProfileDto;
     }
@@ -146,7 +143,7 @@ public class OrganizationService {
 
     public Set<OrganizationPhoto> findAllPhotosByOrganizationId(Long id) {
         Set<OrganizationPhoto> organizationPhotos = getOne(id).getOrganizationPhotos();
-        overwritePhotoPaths(organizationPhotos, organizationPhotosFilepath);
+        overwritePhotoPaths(organizationPhotos, ORGANIZATION_PHOTOS_FILEPATH);
         return organizationPhotos;
     }
 
@@ -170,7 +167,8 @@ public class OrganizationService {
     public List<OrganizationDto> findAll() {
         List<OrganizationDto> organizations = organizationMapper.toOrganizationDtoList(organizationRepo.findAll());
 
-        return overwriteLogoPaths(organizationLogoFilepath, organizations);
+        System.err.println(ORGANIZATION_LOGO_FILEPATH);
+        return overwriteLogoPaths(ORGANIZATION_LOGO_FILEPATH, organizations);
     }
 
     /**
