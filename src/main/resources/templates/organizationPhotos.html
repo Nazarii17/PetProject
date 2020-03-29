@@ -30,7 +30,7 @@
 
 <div class="container">
 
-    <form th:action="@{/photos/all/{id}(id=${id})}"
+    <form th:action="@{/organizations/photos/all}"
           th:method="post"
           enctype="multipart/form-data">
         <div class="custom-file mb-3">
@@ -42,6 +42,10 @@
                        multiple="multiple">
                 <label class="custom-file-label" for="organizationPhotos">Choose photos ></label>
             </div>
+            <input type="hidden"
+                   th:name="organizationId"
+                   th:value="${id}"/>
+
             <p>
                 <button class="btn btn-outline-dark"
                         style="color:black"
@@ -65,13 +69,13 @@
 
             <div class="card ">
 
-                <img th:src="@{'/organizations/uploads/' + ${organizationPhoto.name}}"
+                <img th:src="@{${organizationPhoto.name}}"
                      class="d-block w-100"
                      style="height:400px;"
                      alt="Photo">
                 <div class="card-body">
 
-                    <form th:action="@{/photos/update/{id}(id=${organizationPhoto.id})}"
+                    <form th:action="@{/organizations/photos/change/{id}(id=${organizationPhoto.id})}"
                           th:method="post"
                           enctype="multipart/form-data">
                         <div class="custom-file">
@@ -90,7 +94,8 @@
                             </button>
                         </p>
                     </form>
-                    <form th:action="@{/photos/delete/{id}(id=${organizationPhoto.id})}">
+                    <form th:action="@{/organizations/photos/delete/{id}(id=${organizationPhoto.id})}"
+                          th:method="post">
                         <input type="hidden"
                                th:name="organizationId"
                                th:value="${id}"

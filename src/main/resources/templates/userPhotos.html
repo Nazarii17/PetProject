@@ -30,6 +30,12 @@
 
 <div class="container">
 
+    <p>Plus icon as a link:
+        <a href="#">
+            <span class="glyphicon glyphicon-plus"></span>
+        </a>
+    </p>
+
     <form th:action="@{/photos/user/all}"
           th:method="post"
           enctype="multipart/form-data">
@@ -42,7 +48,7 @@
                        multiple="multiple">
                 <label class="custom-file-label" for="userPhotos">Choose photos ></label>
             </div>
-            <p>
+            <p class="text-center">
                 <button class="btn btn-outline-dark"
                         style="color:black"
                         type="submit">Add photos >
@@ -96,9 +102,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 </div>
 
