@@ -1,5 +1,6 @@
 package com.tkachuk.pet.dto;
 
+import com.tkachuk.pet.entity.OrganizationPhoto;
 import com.tkachuk.pet.entity.OrganizationType;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -11,7 +12,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter @ToString
-public class OrganizationDto {
+@Builder
+public class OrganizationProfileDto {
     private Long id;
     @NotNull
     @NotBlank(message = "Please fill the name!")
@@ -19,7 +21,6 @@ public class OrganizationDto {
     @NotNull
     @NotBlank(message = "Please fill the website!")
     private String website;
-    private String logo;
     private UserDto author;
     private String address;
     private String phoneNumber;
@@ -28,5 +29,7 @@ public class OrganizationDto {
     @NotBlank(message = "Please fill the Description!")
     @Length(max = 2048, message = "Description is to long!")
     private String description;
+    private String logo;
     private Set<OrganizationType> organizationTypes;
+    private Set<OrganizationPhoto> organizationPhotos;
 }
