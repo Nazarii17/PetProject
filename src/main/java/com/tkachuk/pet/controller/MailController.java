@@ -2,6 +2,7 @@ package com.tkachuk.pet.controller;
 
 
 import com.tkachuk.pet.service.MailSender;
+import com.tkachuk.pet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,12 @@ import java.util.Map;
 public class MailController {
 
     private final MailSender mailSender;
+    private final UserService userService;
 
     @Autowired
-    public MailController(MailSender mailSender) {
+    public MailController(MailSender mailSender, UserService userService) {
         this.mailSender = mailSender;
+        this.userService = userService;
     }
 
     @GetMapping("/to-all")
@@ -31,7 +34,7 @@ public class MailController {
     public String sendToAll(@RequestParam(value = "message") String message,
                             @RequestParam(value = "subject") String subject) {
 
-        mailSender.sendToAll(message, subject);
+        userService.sendToAll(message, subject);
         return "redirect:/email/to-all";
     }
 

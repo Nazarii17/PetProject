@@ -9,7 +9,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class MailSender {
@@ -20,12 +19,10 @@ public class MailSender {
     private String username;
 
     private final JavaMailSender mailSender;
-    private final UserService userService;
 
     @Autowired
-    public MailSender(JavaMailSender mailSender, UserService userService) {
+    public MailSender(JavaMailSender mailSender) {
         this.mailSender = mailSender;
-        this.userService = userService;
     }
 
     public void send(String emailTo, String subject, String message) {
@@ -53,12 +50,6 @@ public class MailSender {
                     user.getActivationCode()
             );
             send(user.getEmail(), "Activation code", message);
-        }
-    }
-
-    public void sendToAll(@RequestParam("message") String message, @RequestParam("subject") String subject) {
-        for (User user : userService.findAll()) {
-            send(user.getEmail(), subject, message);
         }
     }
 }
