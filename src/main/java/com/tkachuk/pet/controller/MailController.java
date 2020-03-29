@@ -17,12 +17,10 @@ import java.util.Map;
 public class MailController {
 
     private final MailSender mailSender;
-    private final UserService userService;
 
     @Autowired
     public MailController(MailSender mailSender, UserService userService) {
         this.mailSender = mailSender;
-        this.userService = userService;
     }
 
     @GetMapping("/to-all")
