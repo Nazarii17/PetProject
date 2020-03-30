@@ -110,8 +110,7 @@ public class OrganizationController {
     @PostMapping("/photos/change/{id}")
     public String updatePhoto(@PathVariable("id") Long id,
                               @RequestParam("file") MultipartFile file,
-                              @RequestParam(value = "organizationId") Long orgId
-    ) throws IOException {
+                              @RequestParam(value = "organizationId") Long orgId) {
         organizationService.updatePhoto(id, file);
         return "redirect:/organizations/" + orgId + "/photos/all";
     }
