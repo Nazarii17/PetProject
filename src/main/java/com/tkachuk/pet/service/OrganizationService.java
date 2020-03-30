@@ -40,13 +40,13 @@ public class OrganizationService {
 
     private final OrganizationRepo organizationRepo;
     private final OrganizationMapper organizationMapper;
-    private final PhotoService photoService;
+    private final OrganizationPhotoService photoService;
     private final UserService userService;
 
     @Autowired
     public OrganizationService(OrganizationRepo organizationRepo,
                                OrganizationMapper organizationMapper,
-                               PhotoService photoService,
+                               OrganizationPhotoService photoService,
                                UserService userService) {
         this.organizationRepo = organizationRepo;
         this.organizationMapper = organizationMapper;
@@ -268,6 +268,6 @@ public class OrganizationService {
      * @param id - of photo which should be deleted;
      */
     public void deletePhoto(Long id) {
-        photoService.deletePhoto(id);
+        photoService.deleteById(id);
     }
 }
