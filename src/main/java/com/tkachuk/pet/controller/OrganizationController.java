@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 @Controller
 @RequestMapping("/organizations")
@@ -73,7 +72,7 @@ public class OrganizationController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("organization", organizationService.findById(id));
             model.addAttribute("organizationTypes", OrganizationType.values());
-            return "infoAboutOrganization";
+            return "infoOrganization";
         } else {
             organizationService.update(id, user, organization);
             return "redirect:/organizations/all";
@@ -88,7 +87,7 @@ public class OrganizationController {
 
     @PostMapping("/change-photo/{id}")
     public String updateProfilePhoto(@PathVariable("id") Long id,
-                                     @RequestParam("file") MultipartFile photo) throws IOException {
+                                     @RequestParam("file") MultipartFile photo) {
         organizationService.changeLogo(id, photo);
         return "redirect:/organizations/info/{id}";
     }
