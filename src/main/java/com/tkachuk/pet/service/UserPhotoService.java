@@ -4,10 +4,10 @@ import com.tkachuk.pet.entity.UserPhoto;
 
 public interface UserPhotoService {
 
-    public UserPhoto save(UserPhoto userPhoto);
+    UserPhoto save(UserPhoto userPhoto);
 
-    public UserPhoto getOne(Long id);
+    UserPhoto getOne(Long id);
 
-    public void deleteById(long id);
+    void deleteById(long id);
 
 }
