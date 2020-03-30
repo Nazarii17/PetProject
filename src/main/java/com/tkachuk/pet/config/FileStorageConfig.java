@@ -12,42 +12,88 @@ import java.io.File;
 public class FileStorageConfig {
 
     @Value("${upload.path}")
-    private String baseDir;
+    private String uploadPath;
 
-    @Value("${upload.user.path}")
-    private String userBaseDir;
+    @Value("${upload.path.root}")
+    private String uploadPathRoot;
 
-    @Value("${upload.user.photos.path}")
-    private String userPhotosBaseDir;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Bean(name = "basePath")
-    public String basePath() {
-        //TODO File baseDir = new File(baseDir); ?????
-        File baseDir = new File("uploads");
-        if (!baseDir.exists()) {
-            baseDir.mkdir();
-        }
-        log.info("BasePath created: ", baseDir.getAbsolutePath());
+    @Bean(name = "uploadPath")
+    public String uploadPath() {
+        return uploadPath;
+    }
+
+    @Bean(name = "uploadUserProfilePhotoFilepath")
+    public String userProfilePhotoFilepath() {
+        File baseDir = getFile("users", "profile-photos");
         return baseDir.getAbsolutePath();
     }
 
-    @Bean(name = "userBasePath")
-    public String userProfilePhotoBasePath() {
-        File baseDir = new File(userBaseDir);
-        if (!baseDir.exists()) {
-            baseDir.mkdirs();
-            log.info("userBasePath '" + userBaseDir + "' created: ", baseDir.getAbsolutePath());
-        }
+    @Bean(name = "uploadUserPhotosFilepath")
+    public String userPhotosFilepath() {
+        File baseDir = getFile("users", "photos");
         return baseDir.getAbsolutePath();
     }
-    
-    @Bean(name = "userPhotosBasePath")
-    public String userPhotosBasePath() {
-        File baseDir = new File(userPhotosBaseDir);
+
+    @Bean(name = "uploadOrganizationLogoFilepath")
+    public String organizationLogoFilepath() {
+        File baseDir = getFile("organizations", "logos");
+        return baseDir.getAbsolutePath();
+    }
+
+    @Bean(name = "uploadOrganizationPhotosFilepath")
+    public String organizationPhotosFilepath() {
+        File baseDir = getFile("organizations", "photos");
+        return baseDir.getAbsolutePath();
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Bean(name = "filepathUserProfilePhoto")
+    public String filepathUserProfilePhoto() {
+        return getUrl("users", "profile-photos");
+    }
+
+    @Bean(name = "filepathUserPhotos")
+    public String filepathUserPhotos() {
+        return getUrl("users", "photos");
+    }
+
+    @Bean(name = "filepathOrganizationLogo")
+    public String filepathOrganizationLogo() {
+        return getUrl("organizations", "logos");
+    }
+
+    @Bean(name = "filepathOrganizationPhotos")
+    public String filepathOrganizationPhotos() {
+        return getUrl("organizations", "photos");
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public File getFile(String... folderNames) {
+        File baseDir = new File(getFilepath(folderNames));
         if (!baseDir.exists()) {
             baseDir.mkdirs();
-            log.info("userBasePath '" + userPhotosBaseDir + "' created: ", baseDir.getAbsolutePath());
+            log.info(baseDir.getName() + " '" + baseDir.getAbsolutePath() + "' created");
         }
-        return baseDir.getAbsolutePath();
+        return baseDir;
+    }
+
+    public String getFilepath(String... folderNames) {
+        StringBuilder filepath = new StringBuilder(File.separator);
+        for (String s : folderNames) {
+            filepath.append(s).append(File.separator);
+        }
+        return uploadPath + filepath;
+    }
+
+    public String getUrl(String... folderNames) {
+        StringBuilder filepath = new StringBuilder(File.separator);
+        for (String s : folderNames) {
+            filepath.append(s).append(File.separator);
+        }
+        return File.separator + uploadPathRoot + File.separator + uploadPath + filepath;
     }
 }
