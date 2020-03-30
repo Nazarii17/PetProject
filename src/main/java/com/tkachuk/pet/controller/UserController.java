@@ -80,4 +80,30 @@ public class UserController {
         return "redirect:/users/profile";
     }
 
+    @GetMapping("/photos/all")
+    public String getAllPhotosOfUser(@AuthenticationPrincipal User user,
+                                     Model model) {
+        model.addAttribute("userPhotos", userService.findAllPhotosByUserId(user.getId()));
+        return "userPhotos";
+    }
+
+    @PostMapping("/photos/all")
+    public String addUserPhotos(@AuthenticationPrincipal User user,
+                                @RequestParam("userPhotos") MultipartFile[] photos) {
+        userService.addNewPhotos(user.getId(), photos);
+        return "redirect:/users/photos/all";
+    }
+
+    @PostMapping("/photos/update/{id}")
+    public String userPhotoUpdate(@PathVariable("id") Long id,
+                                  @RequestParam("file") MultipartFile logo) {
+        userService.updateUserPhoto(id, logo);
+        return "redirect:/users/photos/all";
+    }
+
+    @GetMapping("/photos/delete/{id}")
+    public String userPhotoDelete(@PathVariable("id") long id) {
+        userService.deleteUserPhoto(id);
+        return "redirect:/users/photos/all";
+    }
 }
