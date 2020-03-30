@@ -31,8 +31,7 @@
 <div class="container">
     <form class="editForm "
           enctype="multipart/form-data"
-          th:action="@{/user/profile/edit/{id}(id=${userProfileDto.id})}"
-          th:object="${userProfileDto}"
+          th:action="@{/users/profile/edit/{id}(id=${user.id})}"
           th:method="post">
 
         <div id="addition-form" class="addition-form">
@@ -40,7 +39,7 @@
             <div class="input-group mb-3">
                 <input type="hidden"
                        class="form-control is-valid"
-                       th:field="*{id}"
+                       th:field="${user.id}"
                        placeholder="ID"/>
             </div>
             <div class="input-group mb-3">
@@ -48,11 +47,11 @@
                     <span class="input-group-text">Name:</span>
                 </div>
                 <input type="text"
-                       th:class="${#fields.hasErrors('username')} ? 'form-control is-invalid' : 'form-control is-valid' "
-                       th:field="*{username}"
+                       th:class="${#fields.hasErrors('${user.username}')} ? 'form-control is-invalid' : 'form-control is-valid' "
+                       th:field="${user.username}"
                        placeholder="Name"/>
                 <div class="invalid-feedback text-center">
-                    <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                    <label th:if="${#fields.hasErrors('${user.username}')}" th:errors="${user.username}"
                            class="validation-message text-center"></label>
                 </div>
             </div>
@@ -62,11 +61,11 @@
                     <span class="input-group-text">Email:</span>
                 </div>
                 <input type="text"
-                       th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control is-valid' "
-                       th:field="*{email}"
+                       th:class="${#fields.hasErrors('${user.email}')} ? 'form-control is-invalid' : 'form-control is-valid' "
+                       th:field="${user.email}"
                        placeholder="Email"/>
                 <div class="invalid-feedback text-center">
-                    <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                    <label th:if="${#fields.hasErrors('${user.email}')}" th:errors="${user.email}"
                            class="validation-message text-center"></label>
                 </div>
             </div>
@@ -75,37 +74,13 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Gender:</span>
                 </div>
-                <select th:field="*{gender}">
+                <select th:field="${user.gender}">
                     <option th:each="gender : ${genders}"
                             th:value="${gender}"
                             th:text="${gender}"
                     ></option>
                 </select>
             </div>
-
-<!--                    <div class="input-group mb-3">-->
-<!--                        <div class="input-group-prepend">-->
-<!--                            <span class="input-group-text">Password:</span>-->
-<!--                        </div>-->
-<!--                        <input type="password"-->
-<!--                               name="password"-->
-<!--                               th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control is-valid' "-->
-<!--                               th:field="*{password}"-->
-<!--                               placeholder="Password"/>-->
-<!--                        <div class="invalid-feedback text-center">-->
-<!--                            <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}"-->
-<!--                                   class="validation-message text-center"></label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-            <!--        <div class="input-group mb-3"-->
-            <!--             th:each="role: ${roles}">-->
-            <!--            <input type="checkbox" th:value="${role}" th:field="*{roles}">-->
-            <!--            <label th:class="text-white"-->
-            <!--                   th:text="${role}"></label>-->
-            <!--        </div>-->
-
-            <!--        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />-->
 
         </div>
 
@@ -117,7 +92,7 @@
                     type="reset">Reset >
             </button>
             <button type="button" class="btn btn-outline-light"><a
-                    th:href="@{/user/all}"
+                    th:href="@{/}"
                     style="color:white"
                     class="info">Cancel ></a>
             </button>
@@ -128,9 +103,7 @@
 
 </div>
 
-
-<p th:text="${userProfileDto}"></p>
-<p th:text="${genders[0]}"></p>
+<p th:text="${user}"></p>
 
 </body>
 </html>
