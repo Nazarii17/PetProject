@@ -109,7 +109,7 @@
 
                                         <form th:action="@{/users/profile/change-username/{id}(id=${user.id})}"
                                               th:method="post"
-                                              th:object="${userDto}"
+                                              th:object="${user}"
                                               enctype="multipart/form-data">
 
                                             <div class="input-group mb-3">
@@ -130,12 +130,12 @@
                                                        th:field="${user.roles}"/>
 
                                                 <input type="text"
-                                                       th:class="${#fields.hasErrors('${user.username}')} ? 'form-control is-invalid' : 'form-control is-valid'"
-                                                       th:field="${user.username}"
+                                                       th:class="${#fields.hasErrors('username')} ? 'form-control is-invalid' : 'form-control is-valid'"
+                                                       th:field="*{username}"
                                                        placeholder="Username"/>
                                                 <div class="invalid-feedback text-center">
-                                                    <label th:if="${#fields.hasErrors('${user.username}')}"
-                                                           th:errors="${user.username}"
+                                                    <label th:if="${#fields.hasErrors('username')}"
+                                                           th:errors="*{username}"
                                                            class="validation-message text-center"></label>
                                                 </div>
                                             </div>

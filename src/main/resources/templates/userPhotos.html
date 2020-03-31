@@ -36,7 +36,7 @@
         </a>
     </p>
 
-    <form th:action="@{/photos/user/all}"
+    <form th:action="@{/users/photos/all}"
           th:method="post"
           enctype="multipart/form-data">
         <div class="custom-file mb-3">
@@ -55,7 +55,7 @@
                 </button>
 
                 <button type="button" class="btn btn-outline-dark"><a
-                        th:href="@{/user/profile}"
+                        th:href="@{/users/profile}"
                         style="color:black"
                         class="info">Cancel ></a>
                 </button>
@@ -76,7 +76,7 @@
                      alt="Photo">
                 <div class="card-body">
 
-                    <form th:action="@{/photos/user/update/{id}(id=${userPhoto.id})}"
+                    <form th:action="@{/users/photos/update/{id}(id=${userPhoto.id})}"
                           th:method="post"
                           enctype="multipart/form-data">
                         <div class="custom-file">
@@ -92,7 +92,7 @@
                             </button>
                         </p>
                     </form>
-                    <form th:action="@{/photos/user/delete/{id}(id=${userPhoto.id})}">
+                    <form th:action="@{/users/photos/delete/{id}(id=${userPhoto.id})}">
                         <button class="btn btn-outline-dark"
                                 style="color:black"
                                 type="submit">Delete >
