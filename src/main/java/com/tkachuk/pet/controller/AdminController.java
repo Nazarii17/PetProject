@@ -54,7 +54,7 @@ public class AdminController {
             model.addAttribute("roles", Role.values());
             return "editUser";
         } else {
-            userService.update(userAdditionFormWithPasswordDto, id);
+            userService.updateByAdmin(userAdditionFormWithPasswordDto, id);
         }
         return "redirect:/admin/users/all";
     }

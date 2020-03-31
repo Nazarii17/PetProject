@@ -37,14 +37,14 @@ public class UserController {
 
     @PostMapping("/profile/change-username/{id}")
     public String updateUsername(@PathVariable("id") Long id,
-                                 @Valid UserDto userDto,
+                                 @Valid UserDto user,
                                  BindingResult bindingResult,
                                  Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", userService.findById(id));
             return "profile";
         } else {
-            userService.updateUsername(id, userDto);
+            userService.updateUsername(id, user);
             return "redirect:/users/profile";
         }
     }
@@ -75,7 +75,7 @@ public class UserController {
             model.addAttribute("genders", Gender.values());
             return "userProfileEdit";
         } else {
-            userService.update(userProfileDto, id);
+            userService.updateByAdmin(userProfileDto, id);
         }
         return "redirect:/users/profile";
     }
