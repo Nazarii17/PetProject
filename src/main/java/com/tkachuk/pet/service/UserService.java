@@ -11,7 +11,6 @@ import com.tkachuk.pet.repository.UserRepo;
 import com.tkachuk.pet.util.FileUtil;
 import com.tkachuk.pet.util.UserUtil;
 import com.tkachuk.pet.util.constants.Notification;
-import com.tkachuk.pet.utils.UserPhotoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -168,7 +167,16 @@ public class UserService implements UserDetailsService {
 
     public Set<UserPhoto> findAllPhotosByUserId(Long id) {
         Set<UserPhoto> userPhotos = getOne(id).getUserPhotos();
-        return UserPhotoUtil.overwritePhotoPaths(userPhotos, filepathPhotos);
+        return overwritePhotoPaths(userPhotos, filepathPhotos);
+    }
+
+    public Set<UserPhoto> overwritePhotoPaths(Set<UserPhoto> userPhotos, String filepathPhotos) {
+        userPhotos.stream()
+                .filter(organizationPhoto ->
+                        organizationPhoto.getName() != null)
+                .forEach(organizationPhoto ->
+                        organizationPhoto.setName((filepathPhotos + organizationPhoto.getName())));
+        return userPhotos;
     }
 
     private UserPhoto createUserPhoto(MultipartFile file) {

@@ -1,9 +1,9 @@
 package com.tkachuk.pet.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -15,6 +15,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "organization")
 public class Organization {
 
@@ -25,9 +26,9 @@ public class Organization {
     @NotNull
     @NotBlank(message = "Please fill the name!")
     private String name;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @NotNull
-    @NotBlank(message = "Please fill the website!")
+    @NotBlank(message = "website is empty")
     private String website;
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -53,15 +54,13 @@ public class Organization {
     @JoinColumn(name = "organization_id")
     private Set<OrganizationPhoto> organizationPhotos;
 
-    public Organization(Long id,
-                        @NotNull @NotBlank(message = "Please fill the name!") String name,
-                        @NotNull @NotBlank(message = "Please fill the website!") String website,
+    public Organization(Long id,String name,
+                        String website,
                         User author,
                         String address,
                         String phoneNumber,
                         double rating,
-                        @NotNull @NotBlank(message = "Please fill the Description!")
-                        @Length(max = 2048, message = "Description is to long!") String description,
+                        String description,
                         String logo,
                         Set<OrganizationType> organizationTypes
     ) {
