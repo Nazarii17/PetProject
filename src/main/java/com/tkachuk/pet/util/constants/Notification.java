@@ -1,6 +1,7 @@
 package com.tkachuk.pet.util.constants;
 
 public enum Notification {
+    ACTIVATION_CODE("Activation code"),
     MESSAGE_BEGINNING("Dear customer, your "),
     PROFILE_UPDATED("Dear customer, your profile was successfully changed!"),
     NAME_UPDATED("Dear customer, your name was successfully changed!"),
