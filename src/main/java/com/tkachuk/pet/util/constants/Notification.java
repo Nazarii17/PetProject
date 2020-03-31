@@ -1,6 +1,8 @@
 package com.tkachuk.pet.util.constants;
 
-public enum Notifications {
+public enum Notification {
+    MESSAGE_BEGINNING("Dear customer, your "),
+    PROFILE_UPDATED("Dear customer, your profile was successfully changed!"),
     NAME_UPDATED("Dear customer, your name was successfully changed!"),
     PROFILE_PHOTO_UPDATED("Dear customer, your profile photo was successfully changed!"),
     PASSWORD_UPDATED("Dear customer, your password was successfully changed!"),
@@ -14,7 +16,7 @@ public enum Notifications {
 
     private String value;
 
-    Notifications(String value) {
+    Notification(String value) {
         this.value = value;
     }
 
