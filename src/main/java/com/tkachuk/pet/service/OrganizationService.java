@@ -67,7 +67,8 @@ public class OrganizationService {
     }
 
     public Organization getOne(Long id) {
-        return organizationRepo.getOne(id);
+        return organizationRepo.findById(id)
+                .orElseThrow(NoSuchOrganizationException::new);
     }
 
     public void delete(long id) {
