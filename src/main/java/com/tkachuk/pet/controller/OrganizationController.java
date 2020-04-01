@@ -4,6 +4,7 @@ import com.tkachuk.pet.dto.OrganizationDto;
 import com.tkachuk.pet.dto.OrganizationProfileDto;
 import com.tkachuk.pet.entity.OrganizationType;
 import com.tkachuk.pet.entity.User;
+import com.tkachuk.pet.exception.NoSuchOrganizationException;
 import com.tkachuk.pet.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -119,6 +120,12 @@ public class OrganizationController {
                               @RequestParam(value = "organizationId") Long orgId) {
         organizationService.deletePhoto(id);
         return "redirect:/organizations/" + orgId + "/photos/all";
+    }
+
+    @ExceptionHandler(NoSuchOrganizationException.class)
+    public String noSuchOrganizationHandler(){
+
+        return "/exception/noSuchOrganizationException";
     }
 
 }

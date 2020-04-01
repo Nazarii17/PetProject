@@ -5,6 +5,7 @@ import com.tkachuk.pet.dto.OrganizationProfileDto;
 import com.tkachuk.pet.entity.Organization;
 import com.tkachuk.pet.entity.OrganizationPhoto;
 import com.tkachuk.pet.entity.User;
+import com.tkachuk.pet.exception.NoSuchOrganizationException;
 import com.tkachuk.pet.mapper.OrganizationMapper;
 import com.tkachuk.pet.repository.OrganizationRepo;
 import com.tkachuk.pet.util.FileUtil;
@@ -113,7 +114,10 @@ public class OrganizationService {
      * @return - OrganizationDto;
      */
     public OrganizationProfileDto findById(Long id) {
-        OrganizationProfileDto organization = organizationMapper.toOrganizationProfileDto(organizationRepo.getOne(id));
+        OrganizationProfileDto organization = organizationMapper.toOrganizationProfileDto(
+                organizationRepo.findById(id)
+                        .orElseThrow(NoSuchOrganizationException::new));
+        //Todo here?
         return overwriteFilePaths(organization);
     }
 
