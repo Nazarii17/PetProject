@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -123,8 +124,11 @@ public class OrganizationController {
     }
 
     @ExceptionHandler(NoSuchOrganizationException.class)
-    public String noSuchOrganizationHandler(){
-
+    public String noSuchOrganizationHandler(NoSuchOrganizationException e,
+                                            HttpServletResponse httpServletResponse,
+                                            Model model) {
+        httpServletResponse.setHeader("MY_CUSTOM_VAL", "DOES IT WORK?");
+        model.addAttribute("status", e.s);
         return "/exception/noSuchOrganizationException";
     }
 

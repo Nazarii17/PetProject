@@ -7,4 +7,6 @@ import java.util.NoSuchElementException;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No such organization!")
 public class NoSuchOrganizationException extends NoSuchElementException {
+
+    public HttpStatus s = HttpStatus.NOT_FOUND;
 }
