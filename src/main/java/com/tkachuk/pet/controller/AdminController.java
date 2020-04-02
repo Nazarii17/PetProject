@@ -2,9 +2,9 @@ package com.tkachuk.pet.controller;
 
 import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
 import com.tkachuk.pet.entity.Role;
+import com.tkachuk.pet.exception.ApiRequestException;
 import com.tkachuk.pet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,7 +14,6 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
 
     private final UserService userService;
@@ -63,6 +62,18 @@ public class AdminController {
     public String delete(@PathVariable("id") long id) {
         userService.deleteById(id);
         return "redirect:/admin/users/all";
+    }
+
+    @GetMapping("/test")
+    @ResponseBody
+    public void tesException() {
+        throw new ApiRequestException("Ops, something went wrong!!!");
+    }
+
+    @GetMapping("/test/filter-test")
+    @ResponseBody
+    public void testFilter() {
+        throw new ApiRequestException("Ops, something went wrong, isn't it?");
     }
 
 }
