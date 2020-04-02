@@ -4,6 +4,7 @@ import com.tkachuk.pet.dto.UserProfileDto;
 import com.tkachuk.pet.entity.Gender;
 import com.tkachuk.pet.entity.Role;
 import com.tkachuk.pet.entity.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 
 import java.util.Set;
@@ -35,5 +36,17 @@ public class UserUtil {
 
     public static boolean isUsernameValid(User userFromDb, User userFromUi) {
         return UserUtil.isUsernameChanged(userFromUi, userFromDb.getUsername()) && !StringUtils.isEmpty(userFromUi.getUsername());
+    }
+
+    public static boolean areRolesValid(User userFromDb, User userFromUi) {
+        return UserUtil.areRolesChanged(userFromUi, userFromDb.getRoles()) && userFromUi.getRoles().size() > 0;
+    }
+
+    public static boolean isPasswordValid(User userFromDb, User userFromUi, PasswordEncoder passwordEncoder) {
+        return !passwordEncoder.matches(userFromUi.getPassword(), userFromDb.getPassword()) && !StringUtils.isEmpty(userFromUi.getPassword());
+    }
+
+    public static boolean isEmailValid(User userFromDb, User userFromUi) {
+        return UserUtil.isEmailChanged(userFromUi, userFromDb.getEmail()) && !StringUtils.isEmpty(userFromUi.getEmail());
     }
 }
