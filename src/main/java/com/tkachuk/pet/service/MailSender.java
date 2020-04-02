@@ -1,7 +1,7 @@
 package com.tkachuk.pet.service;
 
 import com.tkachuk.pet.entity.User;
-import com.tkachuk.pet.util.constants.Notification;
+import com.tkachuk.pet.constants.Notification;
 
 import java.util.List;
 
