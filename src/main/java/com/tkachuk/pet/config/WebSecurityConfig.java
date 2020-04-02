@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,18 +26,37 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        //    necessary to prevent security from being applied to the resources
+        //    such as CSS, images and javascript
+        web
+                .ignoring()
+                .antMatchers("/resources/**", "/static/**", "/templates/**", "/css/**", "/js/**", "/images/**");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
+                    .authorizeRequests()
                     .antMatchers("/", "/registration", "/static/**", "/activate/*").permitAll()
+                    .antMatchers("/users/**").access("hasAnyAuthority('USER')")
+                    .antMatchers("/admin/**").access("hasAnyAuthority('ADMIN')")
                     .anyRequest().authenticated()
                 .and()
+//                    .csrf().disable()
                     .formLogin()
                     .loginPage("/login")
                     .permitAll()
                 .and()
                     .logout()
                     .permitAll();
+
+        //TODO How to use?
+//        String [] publicUrls = new String [] {
+//                "/organizations/**"
+//        };
+//        http.csrf()
+//                .ignoringAntMatchers(publicUrls);
     }
 
     @Override
