@@ -1,4 +1,4 @@
-package com.tkachuk.pet.util.constants;
+package com.tkachuk.pet.constants;
 
 public enum Notification {
     ACTIVATION_CODE("Activation code"),
