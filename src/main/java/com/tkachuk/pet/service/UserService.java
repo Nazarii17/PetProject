@@ -1,5 +1,6 @@
 package com.tkachuk.pet.service;
 
+import com.tkachuk.pet.constants.Notification;
 import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
 import com.tkachuk.pet.dto.UserDto;
 import com.tkachuk.pet.dto.UserProfileDto;
@@ -10,7 +11,6 @@ import com.tkachuk.pet.mapper.UserMapper;
 import com.tkachuk.pet.repository.UserRepo;
 import com.tkachuk.pet.util.FileUtil;
 import com.tkachuk.pet.util.UserUtil;
-import com.tkachuk.pet.util.constants.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,14 +47,16 @@ public class UserService implements UserDetailsService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserPhotoService photoService;
+    private final UserNotificationsBuilder userNotificationsBuilder;
 
     @Autowired
-    public UserService(UserRepo userRepo, MailSender mailSender, UserMapper userMapper, PasswordEncoder passwordEncoder, UserPhotoService photoService) {
+    public UserService(UserRepo userRepo, MailSender mailSender, UserMapper userMapper, PasswordEncoder passwordEncoder, UserPhotoService photoService, UserNotificationsBuilder userNotificationsBuilder) {
         this.userRepo = userRepo;
         this.mailSender = mailSender;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.photoService = photoService;
+        this.userNotificationsBuilder = userNotificationsBuilder;
     }
 
     public User getOne(Long id) {
@@ -266,31 +268,12 @@ public class UserService implements UserDetailsService {
                               Long id) {
         User userFromDb = getOne(id);
         User userFromUi = userMapper.toEntity(userAdditionFormWithPasswordDto);
-        List<Notification> notifications = new ArrayList<>();
+        List<Notification> notifications = userNotificationsBuilder.buildChangesNotification(userFromDb, userFromUi);
 
-        updateFieldsByAdmin(userFromDb, userFromUi, notifications);
-        mailSender.sendNotification(userFromDb, notifications);
+        if (!notifications.isEmpty()) {
+            mailSender.sendNotification(userFromDb, notifications);
+        }
+
         return save(userFromDb);
-    }
-
-    public User updateFieldsByAdmin(User userFromDb, User userFromUi, List<Notification> notifications) {
-        if (UserUtil.isEmailChanged(userFromUi, userFromDb.getEmail()) && !StringUtils.isEmpty(userFromUi.getEmail())) {
-            userFromDb.setActivationCode(UUID.randomUUID().toString());
-            userFromDb.setEmail(userFromUi.getEmail());
-            notifications.add(Notification.EMAIL_UPDATED_BY_ADMINISTRATION);
-        }
-        if (UserUtil.isUsernameChanged(userFromUi, userFromDb.getUsername()) && !StringUtils.isEmpty(userFromUi.getUsername())) {
-            userFromDb.setUsername(userFromUi.getUsername());
-            notifications.add(Notification.NAME_UPDATED_BY_ADMINISTRATION);
-        }
-        if (!passwordEncoder.matches(userFromUi.getPassword(), userFromDb.getPassword()) && !StringUtils.isEmpty(userFromUi.getPassword())) {
-            userFromDb.setPassword(passwordEncoder.encode(userFromUi.getPassword()));
-            notifications.add(Notification.PASSWORD_UPDATED_BY_ADMINISTRATION);
-        }
-        if (UserUtil.areRolesChanged(userFromUi, userFromDb.getRoles()) && userFromUi.getRoles().size() > 0) {
-            userFromDb.setRoles(userFromUi.getRoles());
-            notifications.add(Notification.ROLE_UPDATED_BY_ADMINISTRATION);
-        }
-        return userFromDb;
     }
 }
