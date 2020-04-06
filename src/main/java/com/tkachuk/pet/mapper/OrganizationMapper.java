@@ -44,7 +44,7 @@ public class OrganizationMapper {
      * @param organization - organization to convert;
      * @return - OrganizationDto with values of given organization;
      */
-    private OrganizationDto toOrganizationDto(Organization organization) {
+    public OrganizationDto toOrganizationDto(Organization organization) {
         return mapper.map(organization, OrganizationDto.class);
     }
 
@@ -82,5 +82,9 @@ public class OrganizationMapper {
         Organization organization = mapper.map(f, Organization.class);
         organization.setAuthor(user);
         return organization;
+    }
+
+    public <F> Organization toEntity(@NonNull F f) {
+        return mapper.map(f, Organization.class);
     }
 }
