@@ -3,7 +3,7 @@ package com.tkachuk.pet.service.impl;
 
 import com.tkachuk.pet.entity.User;
 import com.tkachuk.pet.service.MailSender;
-import com.tkachuk.pet.constants.Notification;
+import com.tkachuk.pet.constant.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;

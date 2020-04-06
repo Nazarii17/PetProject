@@ -1,6 +1,6 @@
 package com.tkachuk.pet.service;
 
-import com.tkachuk.pet.constants.Notification;
+import com.tkachuk.pet.constant.Notification;
 import com.tkachuk.pet.entity.User;
 import com.tkachuk.pet.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
