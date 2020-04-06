@@ -35,6 +35,7 @@ public class FileUtil {
         File f = convert(file);
         String mimeType = new MimetypesFileTypeMap().getContentType(f);
         String type = mimeType.split("/")[0];
+        f.delete();
         return type.equals("image");
     }
 
@@ -113,6 +114,6 @@ public class FileUtil {
      */
     public static String saveImage(String uploadPath, MultipartFile file) {
         validateImage(file);
-        return FileUtil.saveFile(uploadPath, file);
+        return saveFile(uploadPath, file);
     }
 }
