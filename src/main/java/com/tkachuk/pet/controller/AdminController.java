@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admins")
 public class AdminController {
 
     private final UserService userService;
@@ -55,7 +55,7 @@ public class AdminController {
         } else {
             userService.updateByAdmin(userAdditionFormWithPasswordDto, id);
         }
-        return "redirect:/admin/users/all";
+        return "redirect:/admins/users/all";
     }
 
     @GetMapping("/users/delete/{id}")
