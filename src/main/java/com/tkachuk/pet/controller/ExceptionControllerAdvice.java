@@ -1,7 +1,6 @@
 package com.tkachuk.pet.controller;
 
-import com.tkachuk.pet.exception.ApiException;
-import com.tkachuk.pet.exception.ApiRequestException;
+import com.tkachuk.pet.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,4 +33,45 @@ public class ExceptionControllerAdvice {
                 ZonedDateTime.now(ZoneId.of("Z")));
         return new ResponseEntity<>(apiException, httpStatus);
     }
+
+    @ExceptionHandler(value = {RuntimeException.class})
+    public ResponseEntity<Object> handleRuntime(RuntimeException e) {
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                httpStatus,
+                ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+
+    @ExceptionHandler(value = {NoSuchEntityException.class})
+    public ResponseEntity<Object> handleNoSuchEntityException(NoSuchEntityException e) {
+        HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                httpStatus,
+                ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+
+    @ExceptionHandler(value = {NotSavedException.class})
+    public ResponseEntity<Object> handleNotSavedException(NotSavedException e) {
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR; //TODO???
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                httpStatus,
+                ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+
+    @ExceptionHandler(value = {FileException.class})
+    public ResponseEntity<Object> handleFileException(FileException e) {
+        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR; //TODO???
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                httpStatus,
+                ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+
 }
