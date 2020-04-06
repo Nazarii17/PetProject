@@ -19,8 +19,5 @@ public class OrganizationPhoto {
     private Long id;
     @Column
     private String name;
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "organization_id")
-//    private Organization organization;
 
 }

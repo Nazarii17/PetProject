@@ -13,6 +13,12 @@ import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * User entity
+ *
+ * @author Nazarii Tkachuk
+ */
+
 @Entity
 @Data
 @NoArgsConstructor
