@@ -33,7 +33,7 @@
 
     <form class="editForm "
           enctype="multipart/form-data"
-          th:action="@{/admin/users/edit/{id}(id=${userAdditionFormWithPasswordDto.id})}"
+          th:action="@{/admins/users/edit/{id}(id=${userAdditionFormWithPasswordDto.id})}"
           th:object="${userAdditionFormWithPasswordDto}"
           th:method="post">
 
@@ -107,7 +107,7 @@
                     type="reset">Reset >
             </button>
             <button type="button" class="btn btn-outline-light"><a
-                    th:href="@{/admin/users/all}"
+                    th:href="@{/admins/users/all}"
                     style="color:white"
                     class="info">Cancel ></a>
             </button>
