@@ -1,30 +1,74 @@
 package com.tkachuk.pet.service.impl;
 
+import com.tkachuk.pet.constant.ErrorMessage;
 import com.tkachuk.pet.entity.OrganizationPhoto;
+import com.tkachuk.pet.exception.NoSuchEntityException;
+import com.tkachuk.pet.exception.NotSavedException;
 import com.tkachuk.pet.repository.OrganizationPhotoRepo;
 import com.tkachuk.pet.service.OrganizationPhotoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class OrganizationPhotoServiceImpl implements OrganizationPhotoService {
 
     private final OrganizationPhotoRepo organizationPhotoRepo;
 
-    @Autowired
-    public OrganizationPhotoServiceImpl(OrganizationPhotoRepo organizationPhotoRepo) {
-        this.organizationPhotoRepo = organizationPhotoRepo;
+    /**
+     * Gets {@link OrganizationPhoto} from Db,
+     * or throws {@link NoSuchEntityException}, if an organization photo with given id not exists;
+     *
+     * @param id - {@link OrganizationPhoto} id;
+     * @return - {@link OrganizationPhoto} from Db;
+     */
+    @Override
+    public OrganizationPhoto findById(Long id) {
+        return organizationPhotoRepo.findById(id)
+                .orElseThrow(() ->
+                        new NoSuchEntityException(ErrorMessage.ORGANIZATION_PHOTO_NOT_FOUND_BY_ID + id));
     }
 
+    /**
+     * Checks whether {@link OrganizationPhoto} with given id exists;
+     *
+     * @param id - {@link OrganizationPhoto} id;
+     * @return - true if {@link OrganizationPhoto} exists;
+     */
+    @Override
+    public boolean isOrganizationPhotoExists(Long id) {
+        return organizationPhotoRepo.findById(id).isPresent();
+    }
+
+    /**
+     * Deletes {@link OrganizationPhoto} from Db by Id;
+     *
+     * @param id - {@link OrganizationPhoto} id;
+     * @return - 'true' if {@link OrganizationPhoto} was deleted;
+     */
+    @Override
+    public boolean deleteById(Long id) {
+        if (isOrganizationPhotoExists(id)) {
+            organizationPhotoRepo.deleteById(id);
+            return true;
+        } else return false;
+    }
+
+    /**
+     * Saves {@link OrganizationPhoto} to Db;
+     *
+     * @param organizationPhoto - {@link OrganizationPhoto} to save;
+     * @return - saved {@link OrganizationPhoto} with Id;
+     */
+    @Override
     public OrganizationPhoto save(OrganizationPhoto organizationPhoto) {
-        return organizationPhotoRepo.save(organizationPhoto);
+        try {
+            organizationPhotoRepo.save(organizationPhoto);
+        } catch (DataIntegrityViolationException e) {
+            throw new NotSavedException(ErrorMessage.ORGANIZATION_PHOTO_NOT_SAVED);
+        }
+        return organizationPhoto;
     }
 
-    public void deleteById(long id) {
-        organizationPhotoRepo.deleteById(id);
-    }
-
-    public OrganizationPhoto getOne(Long id) {
-        return organizationPhotoRepo.getOne(id);
-    }
 }

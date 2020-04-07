@@ -6,8 +6,10 @@ public interface OrganizationPhotoService {
 
     OrganizationPhoto save(OrganizationPhoto organizationPhoto);
 
-    void deleteById(long id);
+    boolean deleteById(Long id);
 
-    OrganizationPhoto getOne(Long id);
+    OrganizationPhoto findById(Long id);
+
+    boolean isOrganizationPhotoExists(Long id);
 
 }
