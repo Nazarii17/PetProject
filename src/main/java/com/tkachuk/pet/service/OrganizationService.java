@@ -1,96 +1,115 @@
 package com.tkachuk.pet.service;
 
 import com.tkachuk.pet.dto.OrganizationDto;
+import com.tkachuk.pet.dto.OrganizationPhotoDto;
 import com.tkachuk.pet.dto.OrganizationProfileDto;
 import com.tkachuk.pet.entity.Organization;
 import com.tkachuk.pet.entity.OrganizationPhoto;
 import com.tkachuk.pet.entity.User;
-import com.tkachuk.pet.exception.NoSuchOrganizationException;
-import com.tkachuk.pet.mapper.OrganizationMapper;
+import com.tkachuk.pet.exception.NoSuchEntityException;
 import com.tkachuk.pet.repository.OrganizationRepo;
-import com.tkachuk.pet.util.FileUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-@Service
-public class OrganizationService {
-
-    @Autowired
-    @Qualifier("uploadOrganizationLogoFilepath")
-    private String uploadLogoPath;
-
-    @Autowired
-    @Qualifier("uploadOrganizationPhotosFilepath")
-    private String uploadPhotosPath;
-
-    @Autowired
-    @Qualifier("filepathOrganizationLogo")
-    private String filepathLogo;
-
-    @Autowired
-    @Qualifier("filepathOrganizationPhotos")
-    private String filepathPhotos;
-
-    private final OrganizationRepo organizationRepo;
-    private final OrganizationMapper organizationMapper;
-    private final OrganizationPhotoService photoService;
-    private final UserService userService;
-
-    @Autowired
-    public OrganizationService(OrganizationRepo organizationRepo,
-                               OrganizationMapper organizationMapper,
-                               OrganizationPhotoService photoService,
-                               UserService userService) {
-        this.organizationRepo = organizationRepo;
-        this.organizationMapper = organizationMapper;
-        this.photoService = photoService;
-        this.userService = userService;
-    }
-
-    // Todo!!!
-    @Transactional
-    public void update(Organization organization) {
-        //....
-        organizationRepo.save(organization);
-    }
-
-    public Organization save(Organization organization) {
-        return organizationRepo.save(organization);
-    }
-
-    public Organization getOne(Long id) {
-        return organizationRepo.findById(id)
-                .orElseThrow(NoSuchOrganizationException::new);
-    }
-
-    public void delete(long id) {
-        organizationRepo.deleteById(id);
-    }
+public interface OrganizationService {
 
     /**
-     * Changes logo of the organization with given id.
-     * Finds the organization by id.
-     * Validates a given file then saves the file;
+     * Gets {@link Organization} from Db,
+     * or throws {@link NoSuchEntityException}, if an organization with given id not exists;
+     *
+     * @param id - {@link Organization} id;
+     * @return - {@link Organization} from Db;
+     */
+    Organization findById(Long id);
+
+    /**
+     * Checks whether {@link Organization} with given id exists;
+     *
+     * @param id - {@link Organization} id;
+     * @return - true if {@link Organization} exists;
+     */
+    boolean isOrganizationExists(Long id);
+
+    /**
+     * Finds and returns an {@link OrganizationProfileDto} with given id;
+     * Using {@link OrganizationRepo} finds an entity from DB;
+     * Then converts to {@link OrganizationProfileDto} format and returns it;
+     *
+     * @param id - {@link Organization#getId()} id;
+     * @return - {@link OrganizationProfileDto};
+     */
+    Optional<OrganizationProfileDto> findOrganizationProfileById(Long id);
+
+    /**
+     * Returns a List of {@link OrganizationDto} which is representation of all {@link Organization} from Db, with DTO pattern;
+     * First method founds all {@link Organization} from Db using {@link OrganizationRepo#findAll()},
+     * then converts to {@link OrganizationDto} and a list of {@link OrganizationDto} ith overwrote pilePath of logo;
+     *
+     * @return List of {@link Organization};
+     */
+    List<OrganizationDto> findAll();
+
+    /**
+     * Returns a Set of {@link Organization} photos({@link OrganizationPhotoDto}) found for the ID;
+     *
+     * @param id - {@link Organization} id;
+     * @return - Set of {@link OrganizationPhotoDto};
+     */
+    Set<OrganizationPhotoDto> findAllPhotosByOrgId(Long id);
+
+    /**
+     * Creates and saves {@link Organization} using data of given {@link User} and {@link OrganizationDto};
+     *
+     * @param user            - @AuthenticationPrincipal version of {@link User};
+     * @param organizationDto - {@link OrganizationDto} to save;
+     * @return - The non-null value Optional<{{@link OrganizationDto}}>
+     */
+    Optional<OrganizationDto> create(User user, OrganizationDto organizationDto);
+
+    /**
+     * Saves {@link Organization} to Db;
+     *
+     * @param organization - {@link Organization} to save;
+     * @return - saved {@link Organization} with Id;
+     */
+    Organization save(Organization organization);
+
+    /**
+     * Updates {@link Organization} from DB;
+     *
+     * @param id                     - {@link Organization} id;
+     * @param user                   - {@link User} from current session;
+     * @param organizationProfileDto - {@link OrganizationProfileDto} f;
+     * @return - updated Organization;
+     */
+    Optional<OrganizationProfileDto> update(Long id,
+                                            User user,
+                                            OrganizationProfileDto organizationProfileDto);
+
+    /**
+     * Deletes {@link Organization} from Db by Id;
+     *
+     * @param id - {@link Organization} id;
+     * @return - 'true' if {@link Organization} was deleted;
+     */
+    boolean deleteById(Long id);
+
+    /**
+     * Changes logo of the {@link Organization} with given id.
+     * Finds the {@link Organization} by id.
+     * Validates a given {@link MultipartFile} then saves the file;
      * Sets the filename to an organization
      *
-     * @param id   - id of the organization photo of which should be changed;
+     * @param id   - {@link Organization} id of the organization logo of which should be changed;
      * @param file - file from ui to change on;
+     * @return
      * @throws IOException - IOException
      */
-    public void changeLogo(Long id,
-                           MultipartFile file) {
-        Organization organization = getOne(id);
-        saveLogo(organization, file);
-        save(organization);
-    }
+    Optional<OrganizationDto> changeLogo(Long id, MultipartFile file);
 
     /**
      * Saves the given logo and sets to an organization, then returns an organization with saved logo;
@@ -100,125 +119,42 @@ public class OrganizationService {
      * @param file         - Given logo from user to set up to a given organization;
      * @throws IOException - IO error during saving the file;
      */
-    private Organization saveLogo(Organization organization, MultipartFile file) {
-        String fileName = FileUtil.savePhoto(uploadLogoPath, file);
-        organization.setLogo(fileName);
-        return organization;
-    }
+    Organization saveLogo(Organization organization, MultipartFile file);
 
     /**
-     * Finds and returns a OrganizationDto by given id;
-     * Using 'organizationRepo' finds an entity from DB;
-     * Then converts to 'OrganizationDto' format nd returns it  returns;
+     * Deletes the logo from found by id {@link Organization;
      *
-     * @param id - Given id from UI;
-     * @return - OrganizationDto;
+     * @param id - {@link Organization} id of the organization logo of which should be changed;
+     * @return - {@link OrganizationDto} wit no logo;
      */
-    public OrganizationProfileDto findById(Long id) {
-        OrganizationProfileDto organization = organizationMapper.toOrganizationProfileDto(
-                organizationRepo.findById(id)
-                        .orElseThrow(NoSuchOrganizationException::new));
-        //Todo here?
-        return overwriteFilePaths(organization);
-    }
+    Optional<OrganizationDto> deleteLogo(Long id);
 
-    public OrganizationProfileDto overwriteFilePaths(OrganizationProfileDto organizationProfileDto) {
-        organizationProfileDto = overwriteLogoPath(filepathLogo, organizationProfileDto);
-
-        Set<OrganizationPhoto> organizationPhotos = organizationProfileDto.getOrganizationPhotos();
-        organizationProfileDto.setOrganizationPhotos(overwritePhotoPaths(organizationPhotos, filepathPhotos));
-
-        return organizationProfileDto;
-    }
-
-    public OrganizationProfileDto overwriteLogoPath(String organizationLogoFilepath,
-                                                    OrganizationProfileDto organizationProfileDto) {
-        if (organizationProfileDto.getLogo() != null) {
-            organizationProfileDto.setLogo(organizationLogoFilepath + organizationProfileDto.getLogo());
-        }
-        return organizationProfileDto;
-    }
-
-    public Set<OrganizationPhoto> overwritePhotoPaths(Set<OrganizationPhoto> organizationPhotos,
-                                                      String organizationPhotosFilepath) {
-        organizationPhotos.stream()
-                .filter(organizationPhoto ->
-                        organizationPhoto.getName() != null)
-                .forEach(organizationPhoto ->
-                        organizationPhoto.setName((organizationPhotosFilepath + organizationPhoto.getName())));
-        return organizationPhotos;
-    }
-
-    public Set<OrganizationPhoto> findAllPhotosByOrganizationId(Long id) {
-        Set<OrganizationPhoto> organizationPhotos = getOne(id).getOrganizationPhotos();
-        overwritePhotoPaths(organizationPhotos, filepathPhotos);
-        return organizationPhotos;
-    }
-
-    public List<OrganizationDto> overwriteLogoPaths(String organizationLogoFilepath,
-                                                    List<OrganizationDto> organizations) {
-        organizations.stream()
-                .filter(organizationDto ->
-                        organizationDto.getLogo() != null)
-                .forEach(organizationDto ->
-                        organizationDto.setLogo(organizationLogoFilepath + organizationDto.getLogo()));
-        return organizations;
-    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Returns a List of all 'OrganizationCommonInfoDto';
-     * First method founds all organizations using 'organizationRepo',
-     * then converts to 'OrganizationCommonInfoDto' and returns;
+     * Deletes {@link OrganizationPhoto} from Db by Id;
      *
-     * @return - List of all 'OrganizationCommonInfoDto';
+     * @param photoId - {@link OrganizationPhoto} id;
+     * @return - 'true' if {@link OrganizationPhoto} was deleted;
      */
-    public List<OrganizationDto> findAll() {
-        List<OrganizationDto> organizations = organizationMapper.toOrganizationDtoList(organizationRepo.findAll());
-
-        return overwriteLogoPaths(filepathLogo, organizations);
-    }
+    boolean deletePhotoById(Long photoId);
 
     /**
-     * Saves an organization with Valid author, and file;
+     * Updates {@link OrganizationPhotoDto} with a given id to a given photo;
      *
-     * @param user            - user from current session;
-     * @param organizationDto - value from UI form, made by user;
-     * @return - saved Organization;
+     * @param id   - {@link OrganizationPhotoDto} id of photo which should be updated:
+     * @param file - {@link MultipartFile} photo which should change existed one;
+     * @return - saved {@link OrganizationPhotoDto};
      */
-    public Organization save(User user, OrganizationDto organizationDto) {
-        User userFromDb = userService.getOne(user.getId());
-        Organization organization = organizationMapper.toEntity(organizationDto, userFromDb);
-        return save(organization);
-    }
+    Optional<OrganizationPhotoDto> updatePhoto(Long id, MultipartFile file);
 
     /**
-     * Updates an organization from DB;
+     * Creates and saves an {@link OrganizationPhoto} to Db;
      *
-     * @param id                     - id of Organization(uses to find current organization in DB);
-     * @param user                   - user from current session;
-     * @param organizationProfileDto - value from UI form, made by user;
-     * @return - updated Organization;
+     * @param newPhoto - {@link MultipartFile} file to be converted to an {@link OrganizationPhoto};
+     * @return saved {@link MultipartFile} with id;
      */
-    public Organization update(Long id,
-                               User user,
-                               OrganizationProfileDto organizationProfileDto) {
-
-        Organization organization = organizationMapper.toEntity(organizationProfileDto, user);
-
-        Organization organizationFromDb = getOne(id);
-        User userFromDb = userService.fromAuthenticationPrincipalToEntity(user);
-
-        organizationFromDb.setName(organization.getName());
-        organizationFromDb.setWebsite(organization.getWebsite());
-        organizationFromDb.setAddress(organization.getAddress());
-        organizationFromDb.setAuthor(userFromDb);
-        organizationFromDb.setPhoneNumber(organization.getPhoneNumber());
-        organizationFromDb.setRating(organization.getRating());
-        organizationFromDb.setDescription(organization.getDescription());
-        organizationFromDb.setOrganizationTypes(organization.getOrganizationTypes());
-
-        return save(organizationFromDb);
-    }
+    OrganizationPhoto createOrganizationPhoto(MultipartFile newPhoto);
 
     /**
      * Sets photos to an Organization with a given Id;
@@ -227,52 +163,6 @@ public class OrganizationService {
      * @param photos - given by user from UI photos to be sett to an Organization;
      * @return - Updated Organization;
      */
-    public Organization addNewPhotos(Long id,
-                                     MultipartFile[] photos) {
-        Organization organization = getOne(id);
-        Arrays.stream(photos).forEach(FileUtil::validateFile);
-        Set<OrganizationPhoto> organizationPhotos = organizationRepo.getOne(id).getOrganizationPhotos();
-        Arrays.stream(photos)
-                .map(this::createOrganizationPhoto)
-                .forEach(organizationPhotos::add);
-        organization.setOrganizationPhotos(organizationPhotos);
-        return save(organization);
-    }
-
-    /**
-     * Creates and saves an OrganizationPhoto;
-     *
-     * @param newPhoto - file to be converted to an OrganizationPhoto;
-     * @return saved OrganizationPhoto;
-     */
-    public OrganizationPhoto createOrganizationPhoto(MultipartFile newPhoto) {
-        OrganizationPhoto organizationPhoto = new OrganizationPhoto();
-        String resultFilename = FileUtil.savePhoto(uploadPhotosPath, newPhoto);
-        organizationPhoto.setName(resultFilename);
-        return photoService.save(organizationPhoto);
-    }
-
-    /**
-     * Updates photo with a given id to a given photo;
-     *
-     * @param id   - Id of photo which should be updated:
-     * @param file - photo which should change existed one;
-     * @return - saved OrganizationPhoto;
-     */
-    public OrganizationPhoto updatePhoto(Long id,
-                                         MultipartFile file) {
-        OrganizationPhoto organizationPhoto = photoService.getOne(id);
-        OrganizationPhoto photo = createOrganizationPhoto(file);
-        organizationPhoto.setName(photo.getName());
-        return photoService.save(organizationPhoto);
-    }
-
-    /**
-     * Deletes an Organization photo by Id;
-     *
-     * @param id - of photo which should be deleted;
-     */
-    public void deletePhoto(Long id) {
-        photoService.deleteById(id);
-    }
+    Set<OrganizationPhotoDto> addNewPhotos(Long id, MultipartFile[] photos);
+    // Todo!!!@Transactional
 }
