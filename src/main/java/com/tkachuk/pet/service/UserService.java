@@ -1,12 +1,14 @@
 package com.tkachuk.pet.service;
 
-import com.tkachuk.pet.constants.Notification;
+import com.tkachuk.pet.constant.ErrorMessage;
+import com.tkachuk.pet.constant.Notification;
 import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
 import com.tkachuk.pet.dto.UserDto;
 import com.tkachuk.pet.dto.UserProfileDto;
 import com.tkachuk.pet.entity.Role;
 import com.tkachuk.pet.entity.User;
 import com.tkachuk.pet.entity.UserPhoto;
+import com.tkachuk.pet.exception.NoSuchEntityException;
 import com.tkachuk.pet.mapper.UserMapper;
 import com.tkachuk.pet.repository.UserRepo;
 import com.tkachuk.pet.util.FileUtil;
@@ -59,6 +61,11 @@ public class UserService implements UserDetailsService {
         this.userNotificationsBuilder = userNotificationsBuilder;
     }
 
+    public User findById(Long id) {
+        return userRepo.findById(id)
+                .orElseThrow(() -> new NoSuchEntityException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
+    }
+
     public User getOne(Long id) {
         return userRepo.getOne(id);
     }
@@ -71,7 +78,7 @@ public class UserService implements UserDetailsService {
         userRepo.deleteById(id);
     }
 
-    public UserProfileDto findById(Long id) {
+    public UserProfileDto findDtoById(Long id) {
         UserProfileDto userProfileDto = userMapper.toUserProfileDto(userRepo.getOne(id));
         return overwriteProfilePhotoPath(filepathProfilePhoto, userProfileDto);
     }
@@ -135,7 +142,7 @@ public class UserService implements UserDetailsService {
      * @param file - Given Profile Photo from user to set up to a given User;
      */
     private User saveProfilePhoto(User user, MultipartFile file) {
-        String fileName = FileUtil.savePhoto(uploadProfilePhotoPath, file);
+        String fileName = FileUtil.saveImage(uploadProfilePhotoPath, file);
         user.setProfilePhoto(fileName);
         return user;
     }
@@ -183,14 +190,14 @@ public class UserService implements UserDetailsService {
 
     private UserPhoto createUserPhoto(MultipartFile file) {
         UserPhoto userPhoto = new UserPhoto();
-        String resultFilename = FileUtil.savePhoto(uploadPhotosPath, file);
+        String resultFilename = FileUtil.saveImage(uploadPhotosPath, file);
         userPhoto.setName(resultFilename);
         return photoService.save(userPhoto);
     }
 
     public User addNewPhotos(Long id, MultipartFile[] photos) {
         User user = getOne(id);
-        Arrays.stream(photos).forEach(FileUtil::validateFile);
+        Arrays.stream(photos).forEach(FileUtil::isImage);
         Set<UserPhoto> userPhotos = userRepo.getOne(id).getUserPhotos();
         Arrays.stream(photos)
                 .map(this::createUserPhoto)
@@ -243,7 +250,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User fromAuthenticationPrincipalToEntity(User APUser) {
-        return getOne(APUser.getId());
+        return findById(APUser.getId());
     }
 
     public List<UserDto> findAll() {
