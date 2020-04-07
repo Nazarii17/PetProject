@@ -16,11 +16,23 @@ public class OrganizationPhotoMapper {
 
     private final ModelMapper mapper;
 
+    /**
+     * Converts from {@link OrganizationPhoto} to {@link OrganizationPhotoDto};
+     *
+     * @param organizationPhoto - {@link OrganizationPhoto}
+     * @return - {@link OrganizationPhotoDto};
+     */
     public OrganizationPhotoDto toDto(@NonNull OrganizationPhoto organizationPhoto) {
         return mapper.map(organizationPhoto, OrganizationPhotoDto.class);
     }
 
-    public Set<OrganizationPhotoDto> toDtoList(Set<OrganizationPhoto> photos) {
+    /**
+     * Converts from Set of {@link OrganizationPhoto} to Set of {@link OrganizationPhotoDto};
+     *
+     * @param photos - Set of {@link OrganizationPhoto}
+     * @return - Set of {@link OrganizationPhotoDto};
+     */
+    public Set<OrganizationPhotoDto> toDtoSet(Set<OrganizationPhoto> photos) {
         return photos
                 .stream()
                 .map(this::toDto)
