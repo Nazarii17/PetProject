@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter @Setter @ToString
 @Builder
-public class OrganizationProfileDto extends OrganizationDto {
+public class OrganizationProfileDto  {
     private Long id;
     @NotNull
     @NotBlank(message = "Please fill the name!")

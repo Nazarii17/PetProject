@@ -115,7 +115,20 @@ public class OrganizationServiceImpl implements OrganizationService {
      * @param organization - {@link Organization};//TODO
      * @return - {@link Organization} with overwrote filePath of logo;//TODO
      */
-    private <T extends OrganizationDto> T setLogoFilePath(String filepathLogo, T organization) {
+//    private <T extends OrganizationDto> T setLogoFilePath(String filepathLogo, T organization) {
+//        if (organization.getLogo() != null) {
+//            organization.setLogo(filepathLogo + organization.getLogo());
+//        }
+//        return organization;
+//    }
+    private OrganizationDto setLogoFilePath(String filepathLogo, OrganizationDto organization) {
+        if (organization.getLogo() != null) {
+            organization.setLogo(filepathLogo + organization.getLogo());
+        }
+        return organization;
+    }
+
+    private OrganizationProfileDto setLogoFilePath(String filepathLogo, OrganizationProfileDto organization) {
         if (organization.getLogo() != null) {
             organization.setLogo(filepathLogo + organization.getLogo());
         }
