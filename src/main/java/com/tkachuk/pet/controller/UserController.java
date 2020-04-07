@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping("/profile")
     public String getUserProfile(@AuthenticationPrincipal User user,
                                  Model model) {
-        model.addAttribute("user", userService.findById(user.getId()));
+        model.addAttribute("user", userService.findDtoById(user.getId()));
         return "profile";
     }
 
@@ -39,7 +39,7 @@ public class UserController {
                                  BindingResult bindingResult,
                                  Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", userService.findById(id));
+            model.addAttribute("user", userService.findDtoById(id));
             return "profile";
         } else {
             userService.updateUsername(id, user);
@@ -58,7 +58,7 @@ public class UserController {
     public String getUserProfileEditForm(@PathVariable("id") Long id,
                                          UserProfileDto userProfileDto,
                                          Model model) {
-        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("user", userService.findDtoById(id));
         model.addAttribute("genders", Gender.values());
         return "userProfileEdit";
     }
@@ -69,7 +69,7 @@ public class UserController {
                                   BindingResult bindingResult,
                                   Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", userService.findById(id));
+            model.addAttribute("user", userService.findDtoById(id));
             model.addAttribute("genders", Gender.values());
             return "userProfileEdit";
         } else {

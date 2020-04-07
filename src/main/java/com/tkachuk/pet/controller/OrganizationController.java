@@ -51,7 +51,7 @@ public class OrganizationController {
             model.addAttribute("organizationTypes", OrganizationType.values());
             return "addOrganization";
         } else {
-            organizationService.save(user, organization);
+            organizationService.create(user, organization);
             return "redirect:/organizations/all";
         }
     }
@@ -60,7 +60,7 @@ public class OrganizationController {
     public String getInfo(@PathVariable Long id,
                           OrganizationProfileDto organization,
                           Model model) {
-        model.addAttribute("organization", organizationService.findById(id));
+        model.addAttribute("organization", organizationService.findOrganizationProfileById(id).get());
         model.addAttribute("organizationTypes", OrganizationType.values());
         return "infoOrganization";
     }
@@ -72,7 +72,7 @@ public class OrganizationController {
                              BindingResult bindingResult,
                              Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("organization", organizationService.findById(id));
+            model.addAttribute("organization", organizationService.findOrganizationProfileById(id).get());
             model.addAttribute("organizationTypes", OrganizationType.values());
             return "infoOrganization";
         } else {
@@ -83,7 +83,7 @@ public class OrganizationController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id) {
-        organizationService.delete(id);
+        organizationService.deleteById(id);
         return "redirect:/organizations/all";
     }
 
@@ -97,7 +97,7 @@ public class OrganizationController {
     @GetMapping("/{id}/photos/all")
     public String getAllPhotosOfOrganization(@PathVariable Long id,
                                              Model model) {
-        model.addAttribute("organizationPhotos", organizationService.findAllPhotosByOrganizationId(id));
+        model.addAttribute("organizationPhotos", organizationService.findAllPhotosByOrgId(id));
         return "organizationPhotos";
     }
 
@@ -119,7 +119,7 @@ public class OrganizationController {
     @PostMapping("/photos/delete/{id}")
     public String deletePhoto(@PathVariable("id") long id,
                               @RequestParam(value = "organizationId") Long orgId) {
-        organizationService.deletePhoto(id);
+        organizationService.deletePhotoById(id);
         return "redirect:/organizations/" + orgId + "/photos/all";
     }
 
