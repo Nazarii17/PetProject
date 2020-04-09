@@ -6,6 +6,8 @@
 <body>
 Add new user
 
+
+
 <form th:action="@{/registration}"
       th:method="post">
     <div>
@@ -14,8 +16,12 @@ Add new user
     <div>
         <label>Password: <input type="password" name="password"/></label>
     </div>
+    <div>
+        <label>Email: <input type="email" name="email"/></label>
+    </div>
+<!--    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />-->
     <div><input type="submit" value="Sign In"/></div>
 </form>
-
+<!--<a href="/registration">Add new user</a>-->
 </body>
 </html>
