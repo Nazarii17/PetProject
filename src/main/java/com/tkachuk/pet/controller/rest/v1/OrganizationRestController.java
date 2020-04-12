@@ -52,7 +52,7 @@ public class OrganizationRestController {
 
     @PostMapping("/")
     public ResponseEntity<OrganizationDto> create(@AuthenticationPrincipal User user,
-                                                  @Valid OrganizationDto organization) {
+                                                  @RequestBody @Valid OrganizationDto organization) {
         Optional<OrganizationDto> resultOptional = organizationService.create(user, organization);
         return resultOptional.map(ResponseEntity::ok).orElseGet(() ->
                 new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
