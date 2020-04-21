@@ -11,6 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter @ToString
+@Builder
 public class OrganizationDto {
     private Long id;
     @NotNull

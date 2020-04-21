@@ -230,6 +230,7 @@ public class UserService implements UserDetailsService {
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEmail(user.getUsername());
         userRepo.save(user);
         mailSender.sendActivationMessage(user);
         return true;
