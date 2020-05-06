@@ -2,7 +2,7 @@ package com.tkachuk.pet.service;
 
 import com.tkachuk.pet.constant.ErrorMessage;
 import com.tkachuk.pet.constant.Notification;
-import com.tkachuk.pet.dto.UserAdditionFormWithPasswordDto;
+import com.tkachuk.pet.dto.UserCredentialDto;
 import com.tkachuk.pet.dto.UserDto;
 import com.tkachuk.pet.dto.UserProfileDto;
 import com.tkachuk.pet.entity.Role;
@@ -261,8 +261,8 @@ public class UserService implements UserDetailsService {
         return userMapper.toUserDtoList(userRepo.findByUsernameStartsWith(wantedName));
     }
 
-    public UserAdditionFormWithPasswordDto getOneUserAdditionFormWithPasswordDtoById(Long id) {
-        return userMapper.toUserAdditionFormWithPasswordDto(userRepo.getOne(id));
+    public UserCredentialDto getOneUserCredentialDtoById(Long id) {
+        return userMapper.toUserCredentialDto(userRepo.getOne(id));
     }
 
     public void sendToAll(String message, String subject) {
@@ -271,10 +271,10 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public User updateByAdmin(UserAdditionFormWithPasswordDto userAdditionFormWithPasswordDto,
+    public User updateByAdmin(UserCredentialDto userCredentialDto,
                               Long id) {
         User userFromDb = getOne(id);
-        User userFromUi = userMapper.toEntity(userAdditionFormWithPasswordDto);
+        User userFromUi = userMapper.toEntity(userCredentialDto);
         List<Notification> notifications = userNotificationsBuilder.buildChangesNotification(userFromDb, userFromUi);
 
         if (!notifications.isEmpty()) {
@@ -282,5 +282,10 @@ public class UserService implements UserDetailsService {
         }
 
         return save(userFromDb);
+    }
+
+    public boolean isActiveUser(String email) {
+        User user = userRepo.findByEmail(email);
+        return user == null;
     }
 }

@@ -1,7 +1,6 @@
 package com.tkachuk.pet.mapper;
 
 import com.tkachuk.pet.dto.OrganizationDto;
-import com.tkachuk.pet.dto.OrganizationPhotoDto;
 import com.tkachuk.pet.dto.OrganizationProfileDto;
 import com.tkachuk.pet.dto.UserDto;
 import com.tkachuk.pet.entity.Organization;
@@ -9,11 +8,12 @@ import com.tkachuk.pet.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,20 +43,8 @@ public class OrganizationMapper {
      * @return - {@link OrganizationDto} with values of given {@link Organization};
      */
     public OrganizationDto toOrganizationDto(Organization organization) {
-        return mapper.map(organization, OrganizationDto.class);
-    }
-
-    /**
-     * Converts a given {@link Organization} to a {@link OrganizationProfileDto};
-     *
-     * @param organization - {@link Organization} to convert;
-     * @return - {@link OrganizationProfileDto} with values of given {@link Organization};
-     */
-    public OrganizationProfileDto toOrganizationProfileDto(Organization organization) {
         UserDto userDto = userMapper.toUserDto(organization.getAuthor());
-        Set<OrganizationPhotoDto> organizationPhotos = photoMapper.toDtoSet(organization.getOrganizationPhotos());
-
-        return OrganizationProfileDto.builder()
+        return OrganizationDto.builder()
                 .id(organization.getId())
                 .name(organization.getName())
                 .website(organization.getWebsite())
@@ -67,8 +55,17 @@ public class OrganizationMapper {
                 .description(organization.getDescription())
                 .logo(organization.getLogo())
                 .organizationTypes(organization.getOrganizationTypes())
-                .organizationPhotos(organizationPhotos)
                 .build();
+    }
+
+    /**
+     * Converts a given {@link Organization} to a {@link OrganizationProfileDto};
+     *
+     * @param organization - {@link Organization} to convert;
+     * @return - {@link OrganizationProfileDto} with values of given {@link Organization};
+     */
+    public OrganizationProfileDto toOrganizationProfileDto(Organization organization) {
+        return mapper.map(organization, OrganizationProfileDto.class);
     }
 
     /**
@@ -92,5 +89,11 @@ public class OrganizationMapper {
      */
     public <F> Organization toEntity(@NonNull F f) {
         return mapper.map(f, Organization.class);
+    }
+
+    public Page<OrganizationDto> toOrganizationDtoPage(Page<Organization> organizations) {
+        return new PageImpl<>(organizations.stream()
+                .map(this::toOrganizationDto)
+                .collect(Collectors.toList()));
     }
 }
